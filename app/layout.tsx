@@ -64,7 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <header className="site-header">
           <div className="header-inner">
             <Link className="brand" href="/" aria-label="华人大事件首页">
-              <img className="brand-mark" src="/images/brand-mark.svg" alt="" aria-hidden="true" />
+              <img className="brand-mark" src="/images/brand-mark.svg" alt="华人大事件站点标志" />
               <span>
                 <strong>华人大事件</strong>
                 <small>Global Chinese Briefing</small>
@@ -86,7 +86,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <section className="footer-top">
               <div className="footer-brand-block">
                 <Link className="footer-logo" href="/">
-                  <img className="footer-brand-mark" src="/images/brand-mark.svg" alt="" aria-hidden="true" />
+                  <img className="footer-brand-mark" src="/images/brand-mark.svg" alt="华人大事件站点标志" />
                   <span>
                     <strong>华人大事件</strong>
                     <small>Global Chinese Briefing</small>

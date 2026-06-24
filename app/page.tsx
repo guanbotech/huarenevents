@@ -143,6 +143,7 @@ export default function HomePage() {
     <main>
       <JsonLd data={organizationSchema} />
       <JsonLd data={faqSchema} />
+      <h1 className="seo-page-title">华人大事件：东南亚华人大事件、西港大事件、金边大事件与城市风险简报</h1>
       <HomeLiveHero />
 
       <LatestArticles />

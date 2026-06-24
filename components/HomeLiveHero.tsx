@@ -94,7 +94,7 @@ export function HomeLiveHero() {
             <img
               className={index === active ? "is-active" : ""}
               src={item.image}
-              alt=""
+              alt={`${item.title}封面图`}
               key={item.slug}
             />
           ))}
