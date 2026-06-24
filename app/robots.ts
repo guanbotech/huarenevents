@@ -13,7 +13,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/", "/admin/", "/search", "/?", "/dashboard/", "/preview/", "/test/"]
       }
     ],
-    sitemap: `${siteUrl}/sitemap.xml`,
+    sitemap: [`${siteUrl}/sitemap.xml`, `${siteUrl}/sitemap-db.xml`],
     host: siteUrl
   };
 }
