@@ -11,9 +11,9 @@ import { generatePageMetadata, siteDescription, siteName, siteUrl } from "@/lib/
 
 export const metadata = generatePageMetadata({
   title: "华人大事件_东南亚华人大事件_西港大事件_金边大事件_马尼拉大事件",
-  description: "华人大事件聚合东南亚华人大事件、华人社区动态和重点城市消息，整理西港大事件、金边大事件、木牌大事件、波贝大事件、老街大事件、妙瓦底大事件、曼谷大事件、马尼拉大事件等公开资料与投稿线索。",
+  description: "华人大事件聚合东南亚华人大事件、华人社区动态、重点城市消息、诈骗曝光、抓捕遣返、园区动态、博彩平台动态和资金风险，整理西港大事件、金边大事件、木牌大事件、波贝大事件、老街大事件、妙瓦底大事件、曼谷大事件、马尼拉大事件等公开资料与投稿线索。",
   path: "/",
-  keywords: ["东南亚华人大事件", "华人大事件", "东南亚大事件", "西港大事件", "金边大事件", "木牌大事件", "马尼拉大事件", "曼谷大事件", "老街大事件", "妙瓦底大事件", "果敢大事件", "波贝大事件", "柬埔寨华人大事件", "菲律宾华人大事件", "缅北大事件", "海外华人安全"]
+  keywords: ["东南亚华人大事件", "华人大事件", "东南亚大事件", "西港大事件", "金边大事件", "木牌大事件", "马尼拉大事件", "曼谷大事件", "老街大事件", "妙瓦底大事件", "果敢大事件", "波贝大事件", "东南亚诈骗曝光", "园区动态", "电诈窝点", "抓捕遣返", "博彩平台动态", "亚洲博彩平台", "USDT 风险", "换汇风险", "菲律宾 POGO"]
 });
 
 const safetyTopics = ["城市治安", "签证政策", "跨境出行", "平台资金风险", "诈骗防范", "投稿核验"];
@@ -66,15 +66,16 @@ const scamPatterns = ["换汇骗局", "高薪招聘", "假客服", "资金盘", 
 const verifySteps = ["线索提交", "初步筛选", "公开来源核对", "隐私过滤", "风险标注", "发布归档", "投诉更正"];
 
 const visualHubs = [
-  { title: "东南亚大事件", href: "/dongnanya-dashijian", image: "/images/city-xigang.jpg", tag: "区域事件", text: "签证、口岸、政策、城市动态" },
+  { title: "东南亚大事件", href: "/dongnanya-dashijian", image: "/images/city-xigang.jpg", tag: "区域事件", text: "诈骗曝光、园区动态、抓捕遣返、口岸政策" },
   { title: "城市大事件", href: "/city", image: "/images/city-jinbian.jpg", tag: "城市资料", text: "西港、金边、木牌、马尼拉、曼谷" },
-  { title: "风险曝光", href: "/exposure", image: "/images/news-risk.jpg", tag: "线索核验", text: "诈骗、招聘、平台、换汇与商户纠纷" }
+  { title: "华人大事件", href: "/huaren-dashijian", image: "/images/news-business.jpg", tag: "华人社区", text: "商户纠纷、签证骗局、招聘风险、失联求助" },
+  { title: "风险曝光", href: "/exposure", image: "/images/news-risk.jpg", tag: "线索核验", text: "电诈窝点、换汇、USDT、Telegram 风险" }
 ];
 
 const flashNews = [
   {
     time: "23:40",
-    title: "西港口岸与园区周边通行情况持续更新",
+    title: "西港园区动态与口岸周边通行情况持续更新",
     href: "/exposure/city",
     tag: "城市"
   },
@@ -86,9 +87,9 @@ const flashNews = [
   },
   {
     time: "21:30",
-    title: "东南亚多国签证政策进入密集调整期",
+    title: "东南亚签证骗局、假代办与拒签风险线索增多",
     href: "/news/southeast-asia-visa-policy-watch",
-    tag: "政策"
+    tag: "签证"
   },
   {
     time: "20:05",
@@ -103,11 +104,42 @@ const flashNews = [
     tag: "华人"
   },
   {
+    time: "18:10",
+    title: "菲律宾 POGO 监管、平台招聘与资金纠纷持续进入读者检索",
+    href: "/topic/betting-platform-blacklist",
+    tag: "博彩"
+  },
+  {
     time: "17:20",
     title: "妙瓦底与泰缅边境交通消息建议交叉核验",
     href: "/exposure/city",
     tag: "边境"
   }
+];
+
+const coreKeywordLinks = [
+  { title: "东南亚大事件", href: "/dongnanya-dashijian", text: "诈骗曝光、园区动态、抓捕遣返、政策变化" },
+  { title: "华人大事件", href: "/huaren-dashijian", text: "华人社区、商户纠纷、求职风险、签证骗局" },
+  { title: "西港大事件", href: "/city/xigang-dashijian", text: "园区转型、口岸消息、华人商户、安全提醒" },
+  { title: "金边大事件", href: "/city/jinbian-dashijian", text: "商圈租赁、签证服务、执法消息、资金风险" },
+  { title: "木牌大事件", href: "/city/mupai-dashijian", text: "边境口岸、园区动态、人员流动、通关消息" },
+  { title: "马尼拉大事件", href: "/city/manila-dashijian", text: "华人安全、POGO 监管、换汇风险、证件提醒" }
+];
+
+const riskTopicLinks = [
+  { title: "东南亚诈骗曝光", href: "/exposure/scam", tag: "诈骗曝光", text: "公开新闻索引、社群线索、假客服和资金盘风险。" },
+  { title: "园区动态", href: "/topic/overseas-job-scam", tag: "园区 / 招聘", text: "海外高薪招聘、护照扣押、岗位不明和园区工作风险。" },
+  { title: "抓捕遣返", href: "/dongnanya-dashijian", tag: "执法动态", text: "被抓、抓获、落网、拘留、遣返和移民执法消息。" },
+  { title: "Telegram 风险频道", href: "/topic/telegram-scam", tag: "社群风险", text: "假客服、担保交易、换汇广告和招聘骗局线索。" },
+  { title: "USDT 与换汇风险", href: "/topic/usdt-platform-risk", tag: "资金风险", text: "链上转账、支付冻结、换汇纠纷和平台出入金争议。" },
+  { title: "签证骗局", href: "/topic/visa-agent-scam", tag: "签证 / 入境", text: "签证代办、假官网、假批文、入境拒签和中介纠纷。" }
+];
+
+const bettingNewsLinks = [
+  { title: "亚洲博彩平台动态", href: "/betting/asia", text: "亚洲博彩平台、亚洲赌博网站和中文平台公开资料整理。", tag: "亚洲平台" },
+  { title: "菲律宾 POGO 监管", href: "/topic/betting-platform-blacklist", text: "菲律宾博彩监管、平台迁移、招聘风险和执法消息索引。", tag: "监管" },
+  { title: "博彩平台资金纠纷", href: "/exposure/platform", text: "出款延迟、账户冻结、客服失联、USDT 到账和投诉记录。", tag: "资金纠纷" },
+  { title: "博彩网站推荐风险", href: "/betting-platform-review", text: "识别广告导流、虚假评测、黑名单平台和异常营销话术。", tag: "评测风险" }
 ];
 
 const faqs = [
@@ -180,10 +212,28 @@ export default function HomePage() {
 
       <LatestArticles />
 
+      <section className="section core-keyword-section">
+        <div className="section-head">
+          <div>
+            <span className="eyebrow">核心入口</span>
+            <h2>东南亚华人大事件关键词入口</h2>
+          </div>
+          <Link href="/city">城市大事件</Link>
+        </div>
+        <div className="core-keyword-grid">
+          {coreKeywordLinks.map((item) => (
+            <Link className="core-keyword-card" href={item.href} key={item.title}>
+              <strong>{item.title}</strong>
+              <span>{item.text}</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       <section className="section visual-brief-section">
         <div className="section-head">
           <div>
-            <span className="eyebrow">Visual Brief</span>
+            <span className="eyebrow">重点入口</span>
             <h2>今日重点入口</h2>
           </div>
           <Link href="/exposure">查看风险曝光</Link>
@@ -192,6 +242,25 @@ export default function HomePage() {
           {visualHubs.map((item) => (
             <Link className="visual-brief-card" href={item.href} key={item.title}>
               <img src={item.image} alt={`${item.title}封面`} />
+              <span>{item.tag}</span>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="section risk-topic-section">
+        <div className="section-head">
+          <div>
+            <span className="eyebrow">风险专题</span>
+            <h2>诈骗曝光、园区动态与抓捕遣返</h2>
+          </div>
+          <Link href="/exposure">全部曝光</Link>
+        </div>
+        <div className="risk-topic-grid">
+          {riskTopicLinks.map((item) => (
+            <Link className="risk-topic-card" href={item.href} key={item.title}>
               <span>{item.tag}</span>
               <h3>{item.title}</h3>
               <p>{item.text}</p>
@@ -226,6 +295,33 @@ export default function HomePage() {
               </div>
             </article>
           ))}
+        </div>
+      </section>
+
+      <section className="section betting-dynamic-section">
+        <div className="section-head">
+          <div>
+            <span className="eyebrow">博彩动态</span>
+            <h2>博彩平台动态、监管与资金纠纷</h2>
+          </div>
+          <Link href="/betting-platform-review">平台评测</Link>
+        </div>
+        <div className="betting-dynamic-panel">
+          <div className="betting-dynamic-copy">
+            <h3>亚洲博彩平台与线上博彩风险资料</h3>
+            <p>
+              首页新增博彩动态入口，用于整理亚洲博彩平台、亚洲赌博网站、线上博彩、博彩网站推荐、菲律宾 POGO 监管、平台招聘风险、资金纠纷、USDT 出入金和出款争议。内容仅供信息参考，不构成投注建议；请遵守所在地法律法规。
+            </p>
+          </div>
+          <div className="betting-dynamic-list">
+            {bettingNewsLinks.map((item) => (
+              <Link href={item.href} key={item.title}>
+                <span>{item.tag}</span>
+                <strong>{item.title}</strong>
+                <em>{item.text}</em>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 

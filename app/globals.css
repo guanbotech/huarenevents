@@ -671,7 +671,7 @@ p {
 
 .visual-brief-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
 }
 
@@ -736,6 +736,131 @@ p {
   margin-bottom: 16px;
   color: var(--subtle-text);
   font-size: 14px;
+}
+
+.core-keyword-grid,
+.risk-topic-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.core-keyword-card,
+.risk-topic-card {
+  display: grid;
+  min-height: 118px;
+  align-content: start;
+  gap: 8px;
+  border: 1px solid var(--line);
+  background: var(--white);
+  padding: 18px;
+  color: var(--ink);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.core-keyword-card:hover,
+.risk-topic-card:hover {
+  border-color: #cbd2da;
+  box-shadow: 0 10px 24px var(--card-shadow);
+  transform: translateY(-1px);
+}
+
+.core-keyword-card strong {
+  color: var(--ink);
+  font-size: 22px;
+  line-height: 1.25;
+}
+
+.core-keyword-card span,
+.risk-topic-card p {
+  color: var(--subtle-text);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.risk-topic-card span {
+  width: fit-content;
+  border: 1px solid var(--line);
+  background: var(--soft);
+  padding: 4px 8px;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.risk-topic-card h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.betting-dynamic-panel {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.55fr) minmax(0, 1fr);
+  border: 1px solid var(--line);
+  background: var(--white);
+}
+
+.betting-dynamic-copy {
+  display: grid;
+  align-content: center;
+  gap: 12px;
+  padding: 28px;
+  background:
+    linear-gradient(135deg, rgba(194, 31, 42, 0.08), transparent 42%),
+    var(--panel-tint);
+  border-right: 1px solid var(--line);
+}
+
+.betting-dynamic-copy h3 {
+  margin: 0;
+  font-size: 26px;
+  line-height: 1.25;
+}
+
+.betting-dynamic-copy p {
+  margin: 0;
+  color: var(--subtle-text);
+}
+
+.betting-dynamic-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.betting-dynamic-list a {
+  display: grid;
+  gap: 7px;
+  min-height: 132px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 18px;
+  color: var(--ink);
+}
+
+.betting-dynamic-list a:nth-child(2n) {
+  border-right: 0;
+}
+
+.betting-dynamic-list a:nth-last-child(-n + 2) {
+  border-bottom: 0;
+}
+
+.betting-dynamic-list span {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.betting-dynamic-list strong {
+  font-size: 19px;
+  line-height: 1.3;
+}
+
+.betting-dynamic-list em {
+  color: var(--subtle-text);
+  font-size: 14px;
+  font-style: normal;
+  line-height: 1.55;
 }
 
 .risk-map-grid {
@@ -2161,6 +2286,10 @@ th {
   .grid,
   .grid.two,
   .visual-brief-grid,
+  .core-keyword-grid,
+  .risk-topic-grid,
+  .betting-dynamic-panel,
+  .betting-dynamic-list,
   .country-grid,
   .city-keyword-grid,
   .risk-map-grid,
@@ -2181,6 +2310,23 @@ th {
   .risk-review-intro {
     border-right: 0;
     border-bottom: 1px solid var(--line);
+  }
+
+  .betting-dynamic-copy {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    padding: 22px;
+  }
+
+  .betting-dynamic-list a,
+  .betting-dynamic-list a:nth-child(2n),
+  .betting-dynamic-list a:nth-last-child(-n + 2) {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .betting-dynamic-list a:last-child {
+    border-bottom: 0;
   }
 
   .risk-note-grid div {
