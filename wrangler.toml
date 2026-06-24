@@ -1,0 +1,11 @@
+name = "dongnanya-news"
+compatibility_date = "2026-06-22"
+pages_build_output_dir = "out"
+
+[vars]
+NEXT_PUBLIC_SITE_URL = "https://huarenevents.com"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "global-chinese-briefing-cms"
+database_id = "580b2dfd-740b-42da-934c-75367f8a7b38"

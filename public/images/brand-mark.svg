@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="88" height="88" viewBox="0 0 88 88" role="img" aria-label="华人大事件 Logo">
+  <rect width="88" height="88" rx="18" fill="#b8272f"/>
+  <rect x="8" y="8" width="72" height="72" rx="14" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2"/>
+  <path d="M19 58h50" stroke="#ffffff" stroke-width="4" stroke-linecap="square"/>
+  <text x="44" y="48" text-anchor="middle" fill="#ffffff" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="39" font-weight="800">华</text>
+  <text x="44" y="68" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10" font-weight="800" letter-spacing="1.5">NEWS</text>
+</svg>

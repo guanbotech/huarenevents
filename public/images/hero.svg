@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-label="东南亚城市夜景抽象图">
+  <rect width="1200" height="720" fill="#17313b"/>
+  <path d="M0 510 C180 450 290 540 460 470 C650 390 780 420 970 350 C1060 316 1140 300 1200 285 L1200 720 L0 720 Z" fill="#0f7b6c"/>
+  <path d="M90 430h86v210H90zM220 360h110v280H220zM384 410h72v230h-72zM520 315h132v325H520zM705 388h92v252h-92zM846 335h148v305H846zM1040 392h76v248h-76z" fill="#f7f9fb" opacity=".18"/>
+  <path d="M120 462h28M252 401h42M548 354h70M880 376h74M1064 430h28" stroke="#fff" stroke-width="8" opacity=".42"/>
+</svg>

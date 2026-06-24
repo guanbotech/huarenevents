@@ -1,0 +1,8 @@
+.next/
+out/
+node_modules/
+.env*
+.wrangler/
+tmp-*.png
+*.log
+work/admin-token.txt

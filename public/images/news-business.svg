@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450" role="img" aria-label="华人商户经营安全配图">
+  <rect width="800" height="450" fill="#f7f9fb"/>
+  <rect x="90" y="150" width="620" height="190" fill="#fff" stroke="#d9e1ea" stroke-width="8"/>
+  <path d="M110 150l65-70h500l45 70z" fill="#c44a2c"/>
+  <rect x="150" y="210" width="130" height="130" fill="#0f7b6c"/>
+  <rect x="340" y="205" width="300" height="30" fill="#17202a"/>
+  <rect x="340" y="260" width="230" height="22" fill="#637083"/>
+  <rect x="340" y="305" width="280" height="22" fill="#637083"/>
+</svg>

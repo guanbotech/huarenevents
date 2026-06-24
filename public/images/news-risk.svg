@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450" role="img" aria-label="跨境平台风险核验配图">
+  <rect width="800" height="450" fill="#17202a"/>
+  <path d="M400 70l265 310H135z" fill="#fff3ed" stroke="#c44a2c" stroke-width="10"/>
+  <rect x="380" y="165" width="40" height="120" fill="#c44a2c"/>
+  <circle cx="400" cy="320" r="22" fill="#c44a2c"/>
+  <path d="M95 95h150M555 95h150M95 365h95M610 365h95" stroke="#9ed8cf" stroke-width="18"/>
+</svg>

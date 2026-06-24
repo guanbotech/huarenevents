@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="华人大事件">
+  <rect width="1200" height="630" fill="#f5f6f8"/>
+  <rect x="72" y="74" width="1056" height="482" fill="#ffffff" stroke="#e3e7ec" stroke-width="2"/>
+  <rect x="112" y="116" width="132" height="132" rx="24" fill="#b8272f"/>
+  <rect x="126" y="130" width="104" height="104" rx="18" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="3"/>
+  <path d="M142 203h72" stroke="#ffffff" stroke-width="6" stroke-linecap="square"/>
+  <text x="178" y="188" text-anchor="middle" fill="#ffffff" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="60" font-weight="800">华</text>
+  <text x="178" y="219" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="15" font-weight="800" letter-spacing="2">NEWS</text>
+  <text x="282" y="178" fill="#111821" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="68" font-weight="800">华人大事件</text>
+  <text x="286" y="238" fill="#66717f" font-family="Arial, sans-serif" font-size="30" font-weight="600">Global Chinese Briefing</text>
+  <path d="M112 324h860" stroke="#14181f" stroke-width="5"/>
+  <text x="112" y="402" fill="#2f3843" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="34" font-weight="700">全球华人新闻、城市情报与风险资料中心</text>
+  <text x="112" y="470" fill="#66717f" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="25">东南亚事件 · 华人简报 · 风险曝光 · 平台风险评测</text>
+</svg>

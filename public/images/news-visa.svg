@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450" role="img" aria-label="签证政策新闻配图">
+  <rect width="800" height="450" fill="#edf5f3"/>
+  <rect x="110" y="70" width="260" height="310" fill="#fff" stroke="#d9e1ea" stroke-width="8"/>
+  <rect x="430" y="98" width="240" height="250" fill="#17202a"/>
+  <circle cx="240" cy="190" r="72" fill="#0f7b6c"/>
+  <path d="M195 190h90M240 118c28 34 28 110 0 144M240 118c-28 34-28 110 0 144" stroke="#fff" stroke-width="9" fill="none"/>
+  <path d="M470 160h160M470 215h120M470 270h145" stroke="#f7f9fb" stroke-width="16"/>
+</svg>
