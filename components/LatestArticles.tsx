@@ -8,6 +8,7 @@ type Article = {
   title: string;
   description: string;
   category: string;
+  image: string;
   createdAt: string;
 };
 
@@ -34,9 +35,12 @@ export function LatestArticles() {
       <div className="grid">
         {articles.map((article) => (
           <article className="card" key={article.slug}>
-            <span className="meta">{article.category} · {article.createdAt}</span>
-            <h3><Link href={`/news/${article.slug}`}>{article.title}</Link></h3>
-            <p>{article.description}</p>
+            {article.image ? <img src={article.image} alt={`${article.title}配图`} /> : null}
+            <div>
+              <span className="meta">{article.category} · {article.createdAt}</span>
+              <h3><Link href={`/news/${article.slug}`}>{article.title}</Link></h3>
+              <p>{article.description}</p>
+            </div>
           </article>
         ))}
       </div>

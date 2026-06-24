@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { NewsCard } from "@/components/Cards";
-import { HeroCarousel } from "@/components/HeroCarousel";
+import { HomeLiveHero } from "@/components/HomeLiveHero";
 import { JsonLd } from "@/components/JsonLd";
 import { LatestArticles } from "@/components/LatestArticles";
 import { bettingPlatforms } from "@/data/bettingPlatforms";
@@ -70,51 +70,6 @@ const visualHubs = [
   { title: "城市大事件", href: "/city", image: "/images/city-jinbian.jpg", tag: "城市资料", text: "西港、金边、木牌、马尼拉、曼谷" },
   { title: "华人大事件", href: "/huaren-dashijian", image: "/images/news-business.jpg", tag: "华人社区", text: "商户纠纷、签证骗局、招聘风险、失联求助" },
   { title: "风险曝光", href: "/exposure", image: "/images/news-risk.jpg", tag: "线索核验", text: "电诈窝点、换汇、USDT、Telegram 风险" }
-];
-
-const flashNews = [
-  {
-    time: "23:40",
-    title: "西港园区动态与口岸周边通行情况持续更新",
-    href: "/exposure/city",
-    tag: "城市"
-  },
-  {
-    time: "22:15",
-    title: "马尼拉华人商户提醒夜间出行留意现金与证件",
-    href: "/exposure/city",
-    tag: "安全"
-  },
-  {
-    time: "21:30",
-    title: "东南亚签证骗局、假代办与拒签风险线索增多",
-    href: "/news/southeast-asia-visa-policy-watch",
-    tag: "签证"
-  },
-  {
-    time: "20:05",
-    title: "USDT 平台出入金争议线索增多，需核对条款",
-    href: "/news/cross-border-betting-risk-guide",
-    tag: "平台"
-  },
-  {
-    time: "18:50",
-    title: "金边商圈租约、支付与员工证件合规受到关注",
-    href: "/exposure/city",
-    tag: "华人"
-  },
-  {
-    time: "18:10",
-    title: "菲律宾 POGO 监管、平台招聘与资金纠纷持续进入读者检索",
-    href: "/topic/betting-platform-blacklist",
-    tag: "博彩"
-  },
-  {
-    time: "17:20",
-    title: "妙瓦底与泰缅边境交通消息建议交叉核验",
-    href: "/exposure/city",
-    tag: "边境"
-  }
 ];
 
 const coreKeywordLinks = [
@@ -188,27 +143,7 @@ export default function HomePage() {
     <main>
       <JsonLd data={organizationSchema} />
       <JsonLd data={faqSchema} />
-      <section className="hero">
-        <HeroCarousel />
-        <aside className="flash-panel" aria-label="7x24小时快讯滚动">
-          <div className="flash-panel-head">
-            <span className="eyebrow">Live Brief</span>
-            <h2>7x24小时快讯</h2>
-            <p>城市动态、华人社区、安全提醒与平台风险线索滚动更新。</p>
-          </div>
-          <div className="flash-window">
-            <div className="flash-track">
-              {[...flashNews, ...flashNews].map((item, index) => (
-                <Link className="flash-item" href={item.href} key={`${item.time}-${index}`}>
-                  <span className="flash-time">{item.time}</span>
-                  <strong>{item.title}</strong>
-                  <em>{item.tag}</em>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </aside>
-      </section>
+      <HomeLiveHero />
 
       <LatestArticles />
 
