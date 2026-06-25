@@ -1,3 +1,5 @@
+import { generatedNews } from "./generatedNews";
+
 export type NewsItem = {
   slug: string;
   title: string;
@@ -12,7 +14,7 @@ export type NewsItem = {
   body: string[];
 };
 
-export const news: NewsItem[] = [
+const baseNews: NewsItem[] = [
   {
     slug: "southeast-asia-visa-policy-watch",
     title: "东南亚多国签证政策进入密集调整期",
@@ -75,3 +77,5 @@ export const news: NewsItem[] = [
     ]
   }
 ];
+
+export const news: NewsItem[] = [...generatedNews, ...baseNews];
