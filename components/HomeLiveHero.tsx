@@ -101,7 +101,7 @@ export function HomeLiveHero() {
         </div>
         <div className="hero-carousel-content">
           <span className="eyebrow">{slide.category}</span>
-          {active === 0 ? <h1>{slide.title}</h1> : <h2>{slide.title}</h2>}
+          <h2>{slide.title}</h2>
           <p>{slide.description}</p>
           <Link className="button-link" href={`/news/${slide.slug}`}>查看详情</Link>
         </div>

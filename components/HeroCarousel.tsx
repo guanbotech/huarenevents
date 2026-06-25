@@ -57,7 +57,7 @@ export function HeroCarousel() {
       </div>
       <div className="hero-carousel-content">
         <span className="eyebrow">{slide.eyebrow}</span>
-        {active === 0 ? <h1>{slide.title}</h1> : <h2>{slide.title}</h2>}
+        <h2>{slide.title}</h2>
         <p>{slide.description}</p>
         <Link className="button-link" href={slide.href}>{slide.cta}</Link>
       </div>
