@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 type Article = {
   slug: string;
@@ -12,16 +11,7 @@ type Article = {
   createdAt: string;
 };
 
-export function LatestArticles() {
-  const [articles, setArticles] = useState<Article[]>([]);
-
-  useEffect(() => {
-    fetch("/api/articles?limit=6")
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data) => setArticles(data?.articles || []))
-      .catch(() => setArticles([]));
-  }, []);
-
+export function LatestArticles({ articles }: { articles: Article[] }) {
   if (!articles.length) return null;
 
   return (

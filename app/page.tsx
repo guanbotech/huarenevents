@@ -121,6 +121,8 @@ const faqs = [
 ];
 
 export default function HomePage() {
+  const latestArticles = news.slice(0, 12);
+  const featuredArticles = news.slice(0, 6);
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -144,9 +146,9 @@ export default function HomePage() {
       <JsonLd data={organizationSchema} />
       <JsonLd data={faqSchema} />
       <h1 className="seo-page-title">华人大事件：东南亚华人大事件、西港大事件、金边大事件与城市风险简报</h1>
-      <HomeLiveHero />
+      <HomeLiveHero articles={latestArticles} />
 
-      <LatestArticles />
+      <LatestArticles articles={featuredArticles} />
 
       <section className="section core-keyword-section">
         <div className="section-head">
@@ -347,7 +349,7 @@ export default function HomePage() {
           <Link href="/dongnanya-dashijian">更多</Link>
         </div>
         <div className="grid">
-          {news.map((item) => <NewsCard item={item} key={item.slug} />)}
+          {news.slice(0, 12).map((item) => <NewsCard item={item} key={item.slug} />)}
         </div>
       </section>
 

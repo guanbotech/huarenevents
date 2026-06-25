@@ -49,19 +49,9 @@ function hasUsefulImage(article: Article) {
   return Boolean(article.image && !article.image.endsWith(".svg"));
 }
 
-export function HomeLiveHero() {
-  const [articles, setArticles] = useState<Article[]>(fallbackArticles);
+export function HomeLiveHero({ articles: initialArticles = [] }: { articles?: Article[] }) {
+  const articles = initialArticles.length ? initialArticles : fallbackArticles;
   const [active, setActive] = useState(0);
-
-  useEffect(() => {
-    fetch("/api/articles?limit=14")
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data) => {
-        const nextArticles = data?.articles || [];
-        if (nextArticles.length) setArticles(nextArticles);
-      })
-      .catch(() => setArticles(fallbackArticles));
-  }, []);
 
   const slides = useMemo(() => {
     const withImages = articles.filter(hasUsefulImage).slice(0, 5);
