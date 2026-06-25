@@ -1,5 +1,7 @@
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { NewsCard } from "@/components/Cards";
 import { PageHero } from "@/components/PageHero";
+import { news } from "@/data/news";
 import { generatePageMetadata } from "@/lib/seo";
 
 export const metadata = generatePageMetadata({
@@ -10,6 +12,11 @@ export const metadata = generatePageMetadata({
 });
 
 export default function Page() {
+  const safetyNews = news.filter((item) =>
+    item.category === "安全提醒" ||
+    item.keywords.some((keyword) => /安全|签证|入境|口岸|边境|通关|移民|治安|诈骗防范/u.test(keyword))
+  ).slice(0, 18);
+
   return (
     <main>
       <Breadcrumbs items={[{ name: "首页", path: "/" }, { name: "安全提醒", path: "/safety" }]} />
@@ -35,6 +42,17 @@ export default function Page() {
         <p>诈骗线索常见于招聘、换汇、签证、租房、平台充值、物流代收和商户合作。判断一条信息是否可信，至少要看时间、地点、人物关系、证据来源、是否有原始截图或文件、是否已经报警或投诉。本站欢迎读者提交爆料，但编辑会优先处理公共利益、安全风险和可核验资料，不会把未经核实的聊天记录直接当作事实结论发布。</p>
         <p>安全提醒不是恐吓，也不替代官方通知。这里会尽量把分散的风险点讲清楚，方便读者在出行、工作、经商或处理纠纷前多做一步核对。</p>
       </article>
+      <section className="section">
+        <div className="section-head">
+          <div>
+            <span className="eyebrow">Latest Safety</span>
+            <h2>最新安全提醒文章</h2>
+          </div>
+        </div>
+        <div className="grid">
+          {safetyNews.map((item) => <NewsCard item={item} key={item.slug} />)}
+        </div>
+      </section>
     </main>
   );
 }

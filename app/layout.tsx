@@ -112,6 +112,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <div>
                 <h2>核心栏目</h2>
                 <Link href="/dongnanya-dashijian">东南亚大事件</Link>
+                <Link href="/news">最新文章</Link>
                 <Link href="/city">城市大事件</Link>
                 <Link href="/huaren-dashijian">华人大事件</Link>
                 <Link href="/topic">专题库</Link>

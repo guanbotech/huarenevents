@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { AgeWarning } from "@/components/AgeWarning";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { BettingCard } from "@/components/Cards";
+import { BettingCard, NewsCard } from "@/components/Cards";
 import { DisclaimerBox } from "@/components/DisclaimerBox";
 import { JsonLd } from "@/components/JsonLd";
 import { RiskWarning } from "@/components/RiskWarning";
 import { bettingPlatforms } from "@/data/bettingPlatforms";
+import { news } from "@/data/news";
 import { generatePageMetadata } from "@/lib/seo";
 
 export const metadata = generatePageMetadata({
@@ -32,6 +33,10 @@ const faqs = [
 
 export default function Page() {
   const ranking = [...bettingPlatforms].sort((a, b) => b.rating - a.rating);
+  const bettingNews = news.filter((item) =>
+    item.category === "平台评测" ||
+    item.keywords.some((keyword) => /博彩|POGO|线上博彩|亚洲博彩平台|亚洲赌博网站|出款|USDT|平台/u.test(keyword))
+  ).slice(0, 12);
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -180,6 +185,18 @@ export default function Page() {
         <h2>平台资料卡</h2>
         <div className="grid">
           {bettingPlatforms.map((platform) => <BettingCard platform={platform} key={platform.slug} />)}
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="section-head">
+          <div>
+            <span className="eyebrow">Platform News</span>
+            <h2>博彩平台动态与资金风险文章</h2>
+          </div>
+        </div>
+        <div className="grid">
+          {bettingNews.map((item) => <NewsCard item={item} key={item.slug} />)}
         </div>
       </section>
 

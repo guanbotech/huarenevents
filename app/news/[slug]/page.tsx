@@ -31,11 +31,15 @@ export default async function Page({ params }: RouteProps) {
   if (!article) notFound();
   const related = news.filter((item) => item.slug !== article.slug).slice(0, 3);
   const categoryPath =
-    article.category === "华人简报"
+    article.category === "华人简报" || article.category === "华人大事件" || article.category === "商业动态"
       ? "/huaren-dashijian"
       : article.category === "平台评测" || article.category === "平台风险"
         ? "/betting-platform-review"
-        : "/dongnanya-dashijian";
+        : article.category === "风险曝光"
+          ? "/exposure"
+          : article.category === "安全提醒"
+            ? "/safety"
+            : "/dongnanya-dashijian";
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",

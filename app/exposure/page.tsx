@@ -4,7 +4,9 @@ import { FaqJsonLd } from "@/components/FaqJsonLd";
 import { JsonLd } from "@/components/JsonLd";
 import { PageHero } from "@/components/PageHero";
 import { SourceNotice } from "@/components/SourceNotice";
+import { NewsCard } from "@/components/Cards";
 import { exposureItems, hubConfigs } from "@/data/hubs";
+import { news } from "@/data/news";
 import { generatePageMetadata, getCanonicalUrl, siteName } from "@/lib/seo";
 
 const config = hubConfigs.exposure;
@@ -34,17 +36,28 @@ export const metadata = generatePageMetadata({
 });
 
 export default function Page() {
+  const exposureNews = news.filter((item) =>
+    item.category === "风险曝光" ||
+    item.keywords.some((keyword) => /诈骗|曝光|园区|电诈|USDT|换汇|黑名单|投诉|招聘/u.test(keyword))
+  ).slice(0, 18);
   const collectionSchema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: `${config.title} | ${siteName}`,
     description: config.description,
     url: getCanonicalUrl("/exposure"),
-    hasPart: exposureItems.map((item) => ({
+    hasPart: [
+      ...exposureItems.map((item) => ({
       "@type": "WebPage",
       name: item.title,
       url: getCanonicalUrl(`/exposure/${item.slug}`)
-    }))
+      })),
+      ...exposureNews.map((item) => ({
+        "@type": "NewsArticle",
+        name: item.title,
+        url: getCanonicalUrl(`/news/${item.slug}`)
+      }))
+    ]
   };
 
   return (
@@ -93,6 +106,17 @@ export default function Page() {
               <p>{item.description}</p>
             </Link>
           ))}
+        </div>
+      </section>
+      <section className="section">
+        <div className="section-head">
+          <div>
+            <span className="eyebrow">Latest Exposure</span>
+            <h2>最新风险曝光文章</h2>
+          </div>
+        </div>
+        <div className="grid">
+          {exposureNews.map((item) => <NewsCard item={item} key={item.slug} />)}
         </div>
       </section>
       <section className="section">

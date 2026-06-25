@@ -12,7 +12,7 @@ export const metadata = generatePageMetadata({
 });
 
 export default function Page() {
-  const items = news.filter((item) => item.category === "华人简报");
+  const items = news.filter((item) => ["华人简报", "华人大事件", "商业动态"].includes(item.category));
   return (
     <main>
       <Breadcrumbs items={[{ name: "首页", path: "/" }, { name: "华人简报", path: "/huaren-dashijian" }]} />

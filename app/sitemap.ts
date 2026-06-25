@@ -5,7 +5,7 @@ import { hubConfigs } from "@/data/hubs";
 import { news } from "@/data/news";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://example.com";
-const staticLastModified = new Date("2026-06-23T00:00:00.000Z");
+const staticLastModified = new Date("2026-06-25T00:00:00.000Z");
 
 export const dynamic = "force-static";
 
@@ -14,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "",
     "/dongnanya-dashijian",
     "/huaren-dashijian",
+    "/news",
     "/city",
     "/betting-platform-review",
     "/betting/asia",

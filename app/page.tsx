@@ -346,7 +346,7 @@ export default function HomePage() {
             <span className="eyebrow">Latest News</span>
             <h2>最新报道</h2>
           </div>
-          <Link href="/dongnanya-dashijian">更多</Link>
+          <Link href="/news">更多</Link>
         </div>
         <div className="grid">
           {news.slice(0, 12).map((item) => <NewsCard item={item} key={item.slug} />)}
