@@ -1,5 +1,5 @@
 {
   "version": 1,
-  "include": ["/api/*", "/news/*", "/city/*", "/betting/*", "/sitemap-db.xml"],
+  "include": ["/api/*", "/news/*", "/city/*", "/betting/*", "/tag/*", "/sitemap.xml", "/sitemap-static.xml", "/sitemap-db.xml", "/rss.xml", "/feed.xml"],
   "exclude": ["/_next/*", "/images/*", "/runtime-article.css"]
 }

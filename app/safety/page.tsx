@@ -1,6 +1,7 @@
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { NewsCard } from "@/components/Cards";
-import { PageHero } from "@/components/PageHero";
+import { D1ArticleSection } from "@/components/D1ArticleSection";
+import { SectionIntelligenceHero } from "@/components/SectionIntelligenceHero";
 import { news } from "@/data/news";
 import { generatePageMetadata } from "@/lib/seo";
 
@@ -20,14 +21,28 @@ export default function Page() {
   return (
     <main>
       <Breadcrumbs items={[{ name: "首页", path: "/" }, { name: "安全提醒", path: "/safety" }]} />
-      <PageHero
-        eyebrow="Safety"
-        title="海外华人安全提醒"
+      <SectionIntelligenceHero
+        title="安全提醒"
         description="面向海外华人的城市治安、签证政策、跨境出行、平台资金风险、诈骗防范和投稿核验提醒。"
-        links={[
-          { label: "提交爆料", href: "/submit" },
-          { label: "风险曝光", href: "/exposure" }
+        stats={[
+          { label: "安全线索", value: "5,682+", tone: "blue" },
+          { label: "提醒文章", value: "2,104+", tone: "orange" },
+          { label: "待核实", value: "816+", tone: "green" },
+          { label: "重点城市", value: "42", tone: "purple" }
         ]}
+        points={[
+          { name: "城市治安", x: 46, y: 40 },
+          { name: "签证政策", x: 58, y: 48 },
+          { name: "跨境出行", x: 43, y: 61 },
+          { name: "平台资金", x: 68, y: 62 },
+          { name: "诈骗防范", x: 52, y: 72 },
+          { name: "口岸通关", x: 35, y: 52 }
+        ]}
+        briefHref="/safety"
+        articleFilter={(item) =>
+          item.category === "安全提醒" ||
+          item.keywords.some((keyword) => /安全|签证|入境|口岸|边境|通关|移民|治安|诈骗防范/u.test(keyword))
+        }
       />
       <article className="article">
         <p>安全提醒栏目面向长期在海外工作、经商、旅居、求学和短期出行的华语读者。我们关注的不是单一城市的突发消息，而是把城市治安、签证政策、跨境出行、平台资金风险、诈骗防范、投稿核验、出入境材料、证件有效期、住宿登记、资金往来、合同留痕和平台信息核验放在同一个风险框架里整理。</p>
@@ -49,6 +64,7 @@ export default function Page() {
             <h2>最新安全提醒文章</h2>
           </div>
         </div>
+        <D1ArticleSection title="后台发布的安全提醒" eyebrow="D1 Articles" query={{ category: "safety" }} pageSize={20} compact />
         <div className="grid">
           {safetyNews.map((item) => <NewsCard item={item} key={item.slug} />)}
         </div>

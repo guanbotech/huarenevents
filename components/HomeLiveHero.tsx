@@ -50,8 +50,31 @@ function hasUsefulImage(article: Article) {
 }
 
 export function HomeLiveHero({ articles: initialArticles = [] }: { articles?: Article[] }) {
-  const articles = initialArticles.length ? initialArticles : fallbackArticles;
+  const [remoteArticles, setRemoteArticles] = useState<Article[]>([]);
+  const articles = remoteArticles.length ? remoteArticles : (initialArticles.length ? initialArticles : fallbackArticles);
   const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/articles?pageSize=15")
+      .then((response) => response.ok ? response.json() : Promise.reject(new Error("读取失败")))
+      .then((data) => {
+        if (cancelled) return;
+        const items = (data.items || data.articles || []).map((item: Article & { publishedAt?: string; coverImage?: string }) => ({
+          slug: item.slug,
+          title: item.title,
+          description: item.description,
+          category: item.category,
+          image: item.coverImage || item.image || "/images/og-default.svg",
+          createdAt: item.publishedAt || item.createdAt
+        }));
+        setRemoteArticles(items);
+      })
+      .catch(() => setRemoteArticles([]));
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const slides = useMemo(() => {
     const withImages = articles.filter(hasUsefulImage).slice(0, 5);
@@ -60,7 +83,11 @@ export function HomeLiveHero({ articles: initialArticles = [] }: { articles?: Ar
 
   const flashItems = useMemo(() => {
     const items = articles.length ? articles : fallbackArticles;
-    return items.slice(0, 10);
+    const unique = new Map<string, Article>();
+    [...items].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).forEach((item) => {
+      if (!unique.has(item.slug)) unique.set(item.slug, item);
+    });
+    return [...unique.values()].slice(0, 10);
   }, [articles]);
 
   useEffect(() => {
@@ -77,7 +104,7 @@ export function HomeLiveHero({ articles: initialArticles = [] }: { articles?: Ar
   const slide = slides[active] || fallbackArticles[0];
 
   return (
-    <section className="hero">
+    <section className="home-hero">
       <div className="hero-carousel" aria-label="首页焦点图">
         <div className="hero-carousel-media" aria-hidden="true">
           {slides.map((item, index) => (
@@ -90,10 +117,10 @@ export function HomeLiveHero({ articles: initialArticles = [] }: { articles?: Ar
           ))}
         </div>
         <div className="hero-carousel-content">
-          <span className="eyebrow">{slide.category}</span>
-          <h2>{slide.title}</h2>
-          <p>{slide.description}</p>
-          <Link className="button-link" href={`/news/${slide.slug}`}>查看详情</Link>
+          <span className="eyebrow">华人大事件</span>
+          <h2>东南亚华人大事件与城市快讯</h2>
+          <p className="hero-subtitle">聚焦西港、金边、木牌、马尼拉、曼谷等城市动态</p>
+          <Link className="button-link" href={`/news/${slide.slug}`}>浏览头条</Link>
         </div>
         <div className="hero-carousel-dots" aria-label="切换焦点图">
           {slides.map((item, index) => (
@@ -111,14 +138,23 @@ export function HomeLiveHero({ articles: initialArticles = [] }: { articles?: Ar
 
       <aside className="flash-panel" aria-label="7x24小时快讯滚动">
         <div className="flash-panel-head">
-          <span className="eyebrow">Live Brief</span>
-          <h2>7x24小时快讯</h2>
-          <p>自动读取最新发布内容，城市动态、诈骗曝光、安全提醒与平台风险线索持续滚动。</p>
+          <div>
+            <span className="eyebrow">Live Brief</span>
+            <h2>7x24小时快讯</h2>
+          </div>
+          <Link href="/news">更多快讯</Link>
         </div>
         <div className="flash-window">
           <div className="flash-track">
-            {[...flashItems, ...flashItems].map((item, index) => (
-              <Link className="flash-item" href={`/news/${item.slug}`} key={`${item.slug}-${index}`}>
+            {flashItems.map((item) => (
+              <Link className="flash-item" href={`/news/${item.slug}`} key={item.slug}>
+                <span className="flash-time">{formatTime(item.createdAt)}</span>
+                <strong>{item.title}</strong>
+                <em>{item.category}</em>
+              </Link>
+            ))}
+            {flashItems.map((item) => (
+              <Link className="flash-item" href={`/news/${item.slug}`} key={`${item.slug}-loop`} aria-hidden="true" tabIndex={-1}>
                 <span className="flash-time">{formatTime(item.createdAt)}</span>
                 <strong>{item.title}</strong>
                 <em>{item.category}</em>

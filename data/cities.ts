@@ -101,6 +101,14 @@ const detailed: Record<string, Partial<City>> = {
     description: "金边大事件关注柬埔寨首都政策、商业地产、华人社区、公共安全与跨境商务服务变化。",
     highlights: ["首都政策", "商业地产", "社区生活", "商务服务"]
   },
+  "bobei-dashijian": {
+    description: "波贝大事件聚焦柬泰陆路口岸、边贸通行、换汇服务、人员流动和边境商圈秩序，适合关注过境、货运和边境营商的读者查看。",
+    highlights: ["柬泰口岸", "边贸通行", "换汇服务", "边境商圈"]
+  },
+  "mupai-dashijian": {
+    description: "木牌大事件整理越柬边境口岸、跨境物流、园区周边、货运安排和华人商户线索，重点关注通关变化与人员往来。",
+    highlights: ["越柬边境", "跨境物流", "口岸通关", "园区周边"]
+  },
   "laojie-dashijian": {
     description: "老街大事件整理缅北边境局势、口岸秩序、人员流动、华人社群消息与安全撤离提醒。",
     highlights: ["边境局势", "口岸秩序", "人员流动", "安全撤离"]
@@ -124,6 +132,14 @@ const detailed: Record<string, Partial<City>> = {
   "huzhiming-dashijian": {
     description: "胡志明大事件整理越南南部商业中心的营商环境、华人社区、工业园区、交通和合规提醒。",
     highlights: ["营商环境", "工业园区", "华人社区", "合规提醒"]
+  },
+  "jilongpo-dashijian": {
+    description: "吉隆坡大事件关注马来西亚首都圈华人社区、租房与金融账户、公司服务、交通安全和跨境营商资料。",
+    highlights: ["华人社区", "金融账户", "公司服务", "交通安全"]
+  },
+  "xinjiapo-dashijian": {
+    description: "新加坡大事件整理就业准证、公司合规、金融账户、租赁纠纷、华人社区和跨境通勤相关公开信息。",
+    highlights: ["就业准证", "公司合规", "金融账户", "跨境通勤"]
   },
   "wanxiang-dashijian": {
     description: "万象大事件覆盖老挝首都政策、跨境交通、投资动态、华人生活与安全资讯。",

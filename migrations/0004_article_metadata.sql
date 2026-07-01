@@ -1,0 +1,22 @@
+ALTER TABLE articles ADD COLUMN city_slug TEXT NOT NULL DEFAULT '';
+ALTER TABLE articles ADD COLUMN country_slug TEXT NOT NULL DEFAULT '';
+ALTER TABLE articles ADD COLUMN category_slug TEXT NOT NULL DEFAULT '';
+ALTER TABLE articles ADD COLUMN topic_slugs TEXT NOT NULL DEFAULT '[]';
+ALTER TABLE articles ADD COLUMN tags TEXT NOT NULL DEFAULT '[]';
+ALTER TABLE articles ADD COLUMN source_name TEXT NOT NULL DEFAULT '';
+ALTER TABLE articles ADD COLUMN source_url TEXT NOT NULL DEFAULT '';
+ALTER TABLE articles ADD COLUMN canonical_source TEXT NOT NULL DEFAULT '';
+ALTER TABLE articles ADD COLUMN cover_image TEXT NOT NULL DEFAULT '';
+ALTER TABLE articles ADD COLUMN seo_title TEXT NOT NULL DEFAULT '';
+ALTER TABLE articles ADD COLUMN seo_description TEXT NOT NULL DEFAULT '';
+ALTER TABLE articles ADD COLUMN seo_keywords TEXT NOT NULL DEFAULT '';
+ALTER TABLE articles ADD COLUMN verify_status TEXT NOT NULL DEFAULT 'verified';
+ALTER TABLE articles ADD COLUMN risk_level TEXT NOT NULL DEFAULT '普通';
+ALTER TABLE articles ADD COLUMN is_featured INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE articles ADD COLUMN is_breaking INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE articles ADD COLUMN published_at TEXT NOT NULL DEFAULT '';
+
+CREATE INDEX IF NOT EXISTS idx_articles_status_published ON articles(status, published_at, created_at);
+CREATE INDEX IF NOT EXISTS idx_articles_category_slug ON articles(category_slug);
+CREATE INDEX IF NOT EXISTS idx_articles_city_slug ON articles(city_slug);
+CREATE INDEX IF NOT EXISTS idx_articles_country_slug ON articles(country_slug);

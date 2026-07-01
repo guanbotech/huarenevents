@@ -91,7 +91,7 @@ export async function onRequestGet({ env, params, request }) {
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${escapeHtml(row.description)}" />
-  <meta name="keywords" content="${escapeHtml(`${row.name},博彩平台评测,亚洲博彩平台,亚洲赌博网站,线上博彩,博彩网站推荐,USDT 博彩平台,平台风险评测`)}" />
+  <meta name="keywords" content="${escapeHtml(`${row.name},平台资料核验,平台风险资料,出款争议,投诉线索,资金风险,公开资料整理`)}" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="${canonical}" />
   <meta property="og:title" content="${escapeHtml(title)}" />

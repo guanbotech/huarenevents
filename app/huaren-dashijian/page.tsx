@@ -1,6 +1,7 @@
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { NewsCard } from "@/components/Cards";
-import { PageHero } from "@/components/PageHero";
+import { D1ArticleSection } from "@/components/D1ArticleSection";
+import { SectionIntelligenceHero } from "@/components/SectionIntelligenceHero";
 import { news } from "@/data/news";
 import { generatePageMetadata } from "@/lib/seo";
 
@@ -16,14 +17,24 @@ export default function Page() {
   return (
     <main>
       <Breadcrumbs items={[{ name: "首页", path: "/" }, { name: "华人简报", path: "/huaren-dashijian" }]} />
-      <PageHero
-        eyebrow="Chinese Briefing"
-        title="全球华人事件与社区简报"
+      <SectionIntelligenceHero
+        title="华人大事件"
         description="关注海外华人社区、商户动态、生活安全、求助信息、纠纷线索、城市风险和公开新闻整理。"
         stats={[
-          { label: "关注方向", value: "社区 / 商户 / 安全" },
-          { label: "信息来源", value: "公开资料与线索" }
+          { label: "社区线索", value: "8,216+", tone: "blue" },
+          { label: "商户动态", value: "3,408+", tone: "orange" },
+          { label: "待核实", value: "1,126+", tone: "green" },
+          { label: "重点城市", value: "42", tone: "purple" }
         ]}
+        points={[
+          { name: "金边华人", x: 54, y: 56 },
+          { name: "西港商户", x: 42, y: 58 },
+          { name: "马尼拉", x: 86, y: 44 },
+          { name: "曼谷", x: 43, y: 48 },
+          { name: "新加坡", x: 57, y: 84 },
+          { name: "吉隆坡", x: 52, y: 78 }
+        ]}
+        articleFilter={(item) => ["华人简报", "华人大事件", "商业动态"].includes(item.category)}
       />
       <article className="article">
         <p>华人简报栏目关注海外华人社区、商户动态、生活安全、求助信息、纠纷线索、城市风险和公开新闻整理。相比单条新闻，这个栏目更强调“社区语境”：一条商户纠纷可能同时涉及租约、员工证件、支付通道和本地执法；一条安全提醒也可能只适用于某个商圈、街区或行业。</p>
@@ -41,6 +52,7 @@ export default function Page() {
             <h2>华人简报</h2>
           </div>
         </div>
+        <D1ArticleSection title="后台发布的华人事件" eyebrow="D1 Articles" query={{ category: "huaren-dashijian" }} pageSize={20} compact />
         <div className="grid">
           {items.map((item) => <NewsCard item={item} key={item.slug} />)}
         </div>

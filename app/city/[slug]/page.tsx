@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CityCard, NewsCard } from "@/components/Cards";
+import { D1ArticleSection } from "@/components/D1ArticleSection";
 import { FactCheckBox } from "@/components/FactCheckBox";
 import { JsonLd } from "@/components/JsonLd";
 import { cities } from "@/data/cities";
@@ -419,6 +420,7 @@ export default async function Page({ params }: RouteProps) {
       </article>
       <section className="section">
         <h2>最新报道</h2>
+        <D1ArticleSection title={`${city.name}后台发布文章`} eyebrow="D1 Articles" query={{ city: city.slug }} pageSize={20} compact />
         <div className="grid">
           {(cityNews.length ? cityNews : news.slice(0, 3)).map((item) => <NewsCard item={item} key={item.slug} />)}
         </div>

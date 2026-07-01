@@ -21,6 +21,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/betting/global",
     "/betting/blacklist",
     "/betting/guide",
+    "/betting/usdt",
+    "/betting/pogo",
     "/exposure",
     "/visa",
     "/work",

@@ -31,9 +31,10 @@ const navItems = [
   ["城市大事件", "/city"],
   ["华人大事件", "/huaren-dashijian"],
   ["风险曝光", "/exposure"],
-  ["平台评测", "/betting-platform-review"],
   ["安全提醒", "/safety"],
-  ["爆料投稿", "/submit"]
+  ["平台风险资料库", "/betting-platform-review"],
+  ["诈骗套路库", "/topic/telegram-scam"],
+  ["线索投稿", "/submit"]
 ];
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -67,7 +68,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <img className="brand-mark" src="/images/brand-mark.svg" alt="华人大事件站点标志" />
               <span>
                 <strong>华人大事件</strong>
-                <small>Global Chinese Briefing</small>
+                <small>东南亚大事件资料库</small>
               </span>
             </Link>
             <nav className="top-nav" aria-label="主导航">
@@ -77,7 +78,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </Link>
               ))}
             </nav>
-            <ThemeToggle />
+            <div className="header-actions">
+              <form className="header-search" action="/search">
+                <input name="q" placeholder="搜索文章、城市、平台、风险" type="search" />
+                <button type="submit" aria-label="搜索">⌕</button>
+              </form>
+              <ThemeToggle />
+            </div>
           </div>
         </header>
         {children}
@@ -89,7 +96,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   <img className="footer-brand-mark" src="/images/brand-mark.svg" alt="华人大事件站点标志" />
                   <span>
                     <strong>华人大事件</strong>
-                    <small>Global Chinese Briefing</small>
+                    <small>东南亚大事件资料库</small>
                   </span>
                 </Link>
                 <p>关注东南亚华人大事件、重点城市动态、风险曝光、公开资料整理和平台风险评测。本站内容以公开资料、用户投稿线索和城市观察为主，不代表官方结论。</p>
@@ -113,6 +120,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <h2>核心栏目</h2>
                 <Link href="/dongnanya-dashijian">东南亚大事件</Link>
                 <Link href="/news">最新文章</Link>
+                <Link href="/archive">文章归档</Link>
                 <Link href="/city">城市大事件</Link>
                 <Link href="/huaren-dashijian">华人大事件</Link>
                 <Link href="/topic">专题库</Link>
@@ -132,6 +140,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Link href="/correction">投诉更正</Link>
                 <Link href="/contact">联系我们</Link>
                 <Link href="/about">关于我们</Link>
+                <a href="/rss.xml">RSS 订阅</a>
+                <a href="/sitemap.xml">网站地图</a>
               </div>
               <div>
                 <h2>平台资料</h2>
@@ -140,6 +150,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Link href="/betting/global">全球平台</Link>
                 <Link href="/betting/blacklist">平台黑名单</Link>
                 <Link href="/betting/guide">避坑指南</Link>
+              </div>
+              <div>
+                <h2>站点规则</h2>
+                <Link href="/about">关于我们</Link>
+                <Link href="/editorial-policy">投稿规则</Link>
+                <Link href="/source-policy">免责声明</Link>
+                <Link href="/source-policy">隐私政策</Link>
+                <Link href="/contact">联系我们</Link>
               </div>
             </section>
 

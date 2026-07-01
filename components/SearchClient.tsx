@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { bettingPlatforms } from "@/data/bettingPlatforms";
 import { cities } from "@/data/cities";
 import { news } from "@/data/news";
@@ -40,15 +40,43 @@ export function SearchClient() {
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get("q") || "";
   const [query, setQuery] = useState(initialQuery);
+  const [d1Results, setD1Results] = useState<SearchResult[]>([]);
 
   const results = useMemo(() => {
     const keyword = initialQuery.trim().toLowerCase();
     if (!keyword) return records.slice(0, 12);
 
-    return records.filter((item) => {
+    const staticResults = records.filter((item) => {
       const haystack = `${item.title} ${item.description} ${item.type}`.toLowerCase();
       return haystack.includes(keyword);
     });
+    const merged = new Map<string, SearchResult>();
+    [...d1Results, ...staticResults].forEach((item) => merged.set(item.href, item));
+    return [...merged.values()];
+  }, [initialQuery, d1Results]);
+
+  useEffect(() => {
+    const keyword = initialQuery.trim();
+    const url = keyword ? `/api/search?q=${encodeURIComponent(keyword)}&pageSize=30` : "/api/articles?pageSize=12";
+    let cancelled = false;
+    fetch(url)
+      .then((response) => response.ok ? response.json() : Promise.reject(new Error("搜索失败")))
+      .then((data) => {
+        if (cancelled) return;
+        const items = (data.items || data.articles || []).map((item: { slug: string; title: string; description: string; category: string }) => ({
+          title: item.title,
+          description: item.description,
+          href: `/news/${item.slug}`,
+          type: item.category || "文章"
+        }));
+        setD1Results(items);
+      })
+      .catch(() => {
+        if (!cancelled) setD1Results([]);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [initialQuery]);
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {

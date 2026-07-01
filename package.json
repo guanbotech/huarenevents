@@ -5,9 +5,14 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "deploy": "npm run build && wrangler pages deploy out --project-name dongnanya-news"
+    "deploy": "npm run build && wrangler pages deploy out --project-name dongnanya-news",
+    "check:d1": "node scripts/check-d1-publish-health.js",
+    "ingest:telegram": "node scripts/ingest-telegram.mjs",
+    "publish:telegram": "npm run ingest:telegram && npm run check:d1 && npm run deploy",
+    "submit:indexnow": "node scripts/submit-indexnow.mjs"
   },
   "dependencies": {
+    "miniflare": "^4.20260617.1",
     "next": "16.2.9",
     "react": "19.2.7",
     "react-dom": "19.2.7"

@@ -1,8 +1,19 @@
 "use client";
 
+import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 
-const categories = ["东南亚事件", "华人简报", "平台评测", "安全提醒", "平台风险"];
+const categories = [
+  { name: "东南亚事件", slug: "dongnanya-dashijian" },
+  { name: "华人大事件", slug: "huaren-dashijian" },
+  { name: "城市大事件", slug: "city-events" },
+  { name: "风险曝光", slug: "exposure" },
+  { name: "安全提醒", slug: "safety" },
+  { name: "平台评测", slug: "betting-platform-review" },
+  { name: "平台风险", slug: "platform-risk" },
+  { name: "商业动态", slug: "business" },
+  { name: "法律案件", slug: "legal" }
+];
 const tabs = [
   { id: "article", label: "发布文章" },
   { id: "city", label: "城市资料" },
@@ -27,6 +38,20 @@ type Tip = {
   createdAt: string;
 };
 
+type AdminArticle = {
+  slug: string;
+  title: string;
+  description: string;
+  category: string;
+  categorySlug?: string;
+  citySlug?: string;
+  countrySlug?: string;
+  status: string;
+  publishedAt?: string;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
 function slugify(value: string) {
   return value
     .trim()
@@ -37,14 +62,32 @@ function slugify(value: string) {
 }
 
 function emptyArticle() {
+  const now = new Date().toISOString();
   return {
     title: "",
     slug: "",
     description: "",
-    category: categories[0],
+    category: categories[0].name,
+    category_slug: categories[0].slug,
+    country_slug: "",
+    city_slug: "",
+    topic_slugs: "",
+    tags: "",
+    source_name: "公开 Telegram：@SEARiskX",
+    source_url: "https://t.me/SEARiskX",
+    canonical_source: "",
     keywords: "东南亚华人大事件,华人大事件,城市大事件",
     author: "编辑部",
     image: "/images/og-default.svg",
+    cover_image: "",
+    seo_title: "",
+    seo_description: "",
+    seo_keywords: "",
+    verify_status: "verified",
+    risk_level: "普通",
+    is_featured: false,
+    is_breaking: false,
+    published_at: now,
     body: "",
     status: "published"
   };
@@ -91,6 +134,12 @@ export default function AdminPage() {
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
   const [article, setArticle] = useState(emptyArticle);
+  const [articles, setArticles] = useState<AdminArticle[]>([]);
+  const [articleQuery, setArticleQuery] = useState("");
+  const [articleStatus, setArticleStatus] = useState("all");
+  const [articleCategory, setArticleCategory] = useState("");
+  const [articleCity, setArticleCity] = useState("");
+  const [loadingArticles, setLoadingArticles] = useState(false);
   const [city, setCity] = useState(emptyCity);
   const [platform, setPlatform] = useState(emptyPlatform);
   const [tips, setTips] = useState<Tip[]>([]);
@@ -110,6 +159,7 @@ export default function AdminPage() {
 
   async function submitArticle(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (article.body.trim().length < 500 && !window.confirm("正文少于 500 字，是否仍然保存？")) return;
     saveToken();
     setSaving(true);
     setMessage("");
@@ -123,6 +173,42 @@ export default function AdminPage() {
     if (!response.ok) return setMessage(data.error || "保存失败");
     setMessage(`文章已保存：${data.article.url}`);
     setArticle(emptyArticle());
+    loadArticles();
+  }
+
+  async function loadArticles() {
+    saveToken();
+    setLoadingArticles(true);
+    setMessage("");
+    const params = new URLSearchParams();
+    params.set("pageSize", "80");
+    params.set("status", articleStatus);
+    if (articleQuery.trim()) params.set("q", articleQuery.trim());
+    if (articleCategory) params.set("category", articleCategory);
+    if (articleCity.trim()) params.set("city", articleCity.trim());
+    const response = await fetch(`/api/articles?${params}`, { headers: { "x-admin-token": token } });
+    const data = await response.json().catch(() => ({}));
+    setLoadingArticles(false);
+    if (!response.ok) return setMessage(data.error || "读取文章失败");
+    setArticles(data.items || data.articles || []);
+  }
+
+  async function updateArticleStatus(slug: string, status: string) {
+    saveToken();
+    const current = articles.find((item) => item.slug === slug);
+    if (!current) return;
+    const detailResponse = await fetch(`/api/articles/${slug}`, { headers: { "x-admin-token": token } });
+    const detailData = await detailResponse.json().catch(() => ({}));
+    const detail = detailData.article || current;
+    const response = await fetch("/api/articles", {
+      method: "PATCH",
+      headers: { "content-type": "application/json", "x-admin-token": token },
+      body: JSON.stringify({ ...detail, status })
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) return setMessage(data.error || "更新失败");
+    setArticles((items) => items.map((item) => (item.slug === slug ? { ...item, status } : item)));
+    setMessage(`${slug} 已更新为 ${status}`);
   }
 
   async function submitCity(event: FormEvent<HTMLFormElement>) {
@@ -212,13 +298,42 @@ export default function AdminPage() {
               <label>Slug<input value={articleSlug} onChange={(event) => setArticle({ ...article, slug: slugify(event.target.value) })} required /></label>
               <label>摘要<textarea value={article.description} onChange={(event) => setArticle({ ...article, description: event.target.value })} rows={3} required /></label>
               <div className="form-grid">
-                <label>分类<select value={article.category} onChange={(event) => setArticle({ ...article, category: event.target.value })}>{categories.map((item) => <option key={item}>{item}</option>)}</select></label>
+                <label>分类<select value={article.category_slug} onChange={(event) => {
+                  const selected = categories.find((item) => item.slug === event.target.value) || categories[0];
+                  setArticle({ ...article, category: selected.name, category_slug: selected.slug });
+                }}>{categories.map((item) => <option key={item.slug} value={item.slug}>{item.name}</option>)}</select></label>
                 <label>状态<select value={article.status} onChange={(event) => setArticle({ ...article, status: event.target.value })}><option value="published">发布</option><option value="draft">草稿</option></select></label>
+              </div>
+              <div className="form-grid">
+                <label>国家 country_slug<input value={article.country_slug} onChange={(event) => setArticle({ ...article, country_slug: event.target.value })} placeholder="cambodia / philippines / thailand" /></label>
+                <label>城市 city_slug<input value={article.city_slug} onChange={(event) => setArticle({ ...article, city_slug: event.target.value })} placeholder="xigang-dashijian" /></label>
+              </div>
+              <div className="form-grid">
+                <label>专题 topic_slugs<input value={article.topic_slugs} onChange={(event) => setArticle({ ...article, topic_slugs: event.target.value })} placeholder="telegram-scam,exchange-scam" /></label>
+                <label>标签 tags<input value={article.tags} onChange={(event) => setArticle({ ...article, tags: event.target.value })} placeholder="西港大事件,诈骗曝光,换汇风险" /></label>
               </div>
               <label>关键词<input value={article.keywords} onChange={(event) => setArticle({ ...article, keywords: event.target.value })} /></label>
               <div className="form-grid">
                 <label>作者<input value={article.author} onChange={(event) => setArticle({ ...article, author: event.target.value })} /></label>
                 <label>图片 URL<input value={article.image} onChange={(event) => setArticle({ ...article, image: event.target.value })} /></label>
+                <label>封面图 URL<input value={article.cover_image} onChange={(event) => setArticle({ ...article, cover_image: event.target.value })} /></label>
+                <label>发布时间<input value={article.published_at} onChange={(event) => setArticle({ ...article, published_at: event.target.value })} /></label>
+              </div>
+              <div className="form-grid">
+                <label>来源名称<input value={article.source_name} onChange={(event) => setArticle({ ...article, source_name: event.target.value })} /></label>
+                <label>来源 URL<input value={article.source_url} onChange={(event) => setArticle({ ...article, source_url: event.target.value })} /></label>
+                <label>原始 canonical<input value={article.canonical_source} onChange={(event) => setArticle({ ...article, canonical_source: event.target.value })} /></label>
+              </div>
+              <div className="form-grid">
+                <label>SEO title<input value={article.seo_title} onChange={(event) => setArticle({ ...article, seo_title: event.target.value })} /></label>
+                <label>SEO description<input value={article.seo_description} onChange={(event) => setArticle({ ...article, seo_description: event.target.value })} /></label>
+                <label>SEO keywords<input value={article.seo_keywords} onChange={(event) => setArticle({ ...article, seo_keywords: event.target.value })} /></label>
+              </div>
+              <div className="form-grid">
+                <label>核验状态<select value={article.verify_status} onChange={(event) => setArticle({ ...article, verify_status: event.target.value })}><option value="verified">公开资料整理</option><option value="pending">待核实</option><option value="disputed">存在争议</option></select></label>
+                <label>风险等级<select value={article.risk_level} onChange={(event) => setArticle({ ...article, risk_level: event.target.value })}><option>普通</option><option>低</option><option>中</option><option>高</option></select></label>
+                <label><input checked={article.is_featured} onChange={(event) => setArticle({ ...article, is_featured: event.target.checked })} type="checkbox" /> 推荐文章</label>
+                <label><input checked={article.is_breaking} onChange={(event) => setArticle({ ...article, is_breaking: event.target.checked })} type="checkbox" /> 7x24 快讯</label>
               </div>
               <label>
                 正文
@@ -233,6 +348,40 @@ export default function AdminPage() {
               </label>
               <button className="button-link" type="submit" disabled={saving}>{saving ? "保存中..." : "保存文章"}</button>
             </form>
+          ) : null}
+
+          {activeTab === "article" ? (
+            <section className="admin-list-panel">
+              <div className="section-head">
+                <div>
+                  <span className="eyebrow">D1 Articles</span>
+                  <h2>后台文章列表</h2>
+                </div>
+                <button className="button-link" type="button" onClick={loadArticles} disabled={loadingArticles}>{loadingArticles ? "读取中..." : "读取文章"}</button>
+              </div>
+              <div className="form-grid">
+                <label>搜索标题/正文<input value={articleQuery} onChange={(event) => setArticleQuery(event.target.value)} /></label>
+                <label>状态<select value={articleStatus} onChange={(event) => setArticleStatus(event.target.value)}><option value="all">全部</option><option value="published">已发布</option><option value="draft">草稿</option></select></label>
+                <label>分类<select value={articleCategory} onChange={(event) => setArticleCategory(event.target.value)}><option value="">全部分类</option>{categories.map((item) => <option key={item.slug} value={item.slug}>{item.name}</option>)}</select></label>
+                <label>城市<input value={articleCity} onChange={(event) => setArticleCity(event.target.value)} placeholder="xigang-dashijian" /></label>
+              </div>
+              <div className="admin-article-list">
+                {articles.map((item) => (
+                  <article className="admin-article-row" key={item.slug}>
+                    <div>
+                      <span className="meta">{item.category} · {item.categorySlug || "-"} · {item.status}</span>
+                      <h3><Link href={`/news/${item.slug}`} target="_blank">{item.title}</Link></h3>
+                      <p>{item.description}</p>
+                      <p className="meta">{item.citySlug || "未绑定城市"} · {item.publishedAt || item.createdAt}</p>
+                    </div>
+                    <div className="tip-actions">
+                      <button type="button" onClick={() => updateArticleStatus(item.slug, "published")}>发布</button>
+                      <button type="button" onClick={() => updateArticleStatus(item.slug, "draft")}>下架</button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </section>
           ) : null}
 
           {activeTab === "city" ? (

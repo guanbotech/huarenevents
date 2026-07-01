@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { DisclaimerBox } from "@/components/DisclaimerBox";
+import { D1ArticleSection } from "@/components/D1ArticleSection";
 import { FactCheckBox } from "@/components/FactCheckBox";
 import { FaqJsonLd } from "@/components/FaqJsonLd";
 import { JsonLd } from "@/components/JsonLd";
 import { PageHero } from "@/components/PageHero";
+import { SectionIntelligenceHero } from "@/components/SectionIntelligenceHero";
 import { SourceNotice } from "@/components/SourceNotice";
 import { cities } from "@/data/cities";
 import { news } from "@/data/news";
@@ -58,6 +60,7 @@ export function HubIndexPage({ config }: { config: HubConfig }) {
 
 export function HubDetailPage({ config, item }: { config: HubConfig; item: HubItem }) {
   const isTopic = config.basePath === "/topic";
+  const isScamLibrary = isTopic && item.slug === "telegram-scam";
   const topicCities = cities
     .filter((city) => item.tags.some((tag) => city.name.includes(tag) || city.country.includes(tag)))
     .slice(0, 6);
@@ -85,15 +88,41 @@ export function HubDetailPage({ config, item }: { config: HubConfig; item: HubIt
       <FaqJsonLd items={faqItems} />
       <JsonLd data={breadcrumbSchema([{ name: "首页", path: "/" }, { name: config.label, path: config.basePath }, { name: item.title, path: `${config.basePath}/${item.slug}` }])} />
       <Breadcrumbs items={[{ name: "首页", path: "/" }, { name: config.label, path: config.basePath }, { name: item.title, path: `${config.basePath}/${item.slug}` }]} />
-      <PageHero
-        eyebrow={config.eyebrow}
-        title={item.title}
-        description={item.description}
-        links={[
-          { label: `返回${config.label}`, href: config.basePath },
-          { label: "提交爆料", href: "/submit" }
-        ]}
-      />
+      {isScamLibrary ? (
+        <SectionIntelligenceHero
+          title="诈骗套路库"
+          description="整理 Telegram 群组招聘、假客服、虚假担保、押证件、高薪岗位、换汇诈骗和海外诈骗线索。"
+          stats={[
+            { label: "套路线索", value: "4,508+", tone: "blue" },
+            { label: "已归档", value: "1,936+", tone: "orange" },
+            { label: "待核实", value: "728+", tone: "green" },
+            { label: "风险类型", value: "12", tone: "purple" }
+          ]}
+          points={[
+            { name: "Telegram", x: 42, y: 39 },
+            { name: "假客服", x: 58, y: 36 },
+            { name: "招聘骗局", x: 51, y: 54 },
+            { name: "押证件", x: 67, y: 58 },
+            { name: "换汇风险", x: 38, y: 66 },
+            { name: "虚假担保", x: 56, y: 76 }
+          ]}
+          briefHref="/topic/telegram-scam"
+          articleFilter={(entry) =>
+            entry.keywords.some((keyword) => /Telegram|诈骗|招聘|假客服|换汇|担保|押证件/u.test(keyword)) ||
+            /Telegram|诈骗|招聘|假客服|换汇|担保|押证件/u.test(entry.title)
+          }
+        />
+      ) : (
+        <PageHero
+          eyebrow={config.eyebrow}
+          title={item.title}
+          description={item.description}
+          links={[
+            { label: `返回${config.label}`, href: config.basePath },
+            { label: "提交爆料", href: "/submit" }
+          ]}
+        />
+      )}
       <article className="article wide-article">
         <div className="tag-row detail-tags">
           {item.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}
@@ -108,6 +137,7 @@ export function HubDetailPage({ config, item }: { config: HubConfig; item: HubIt
           <>
             <h2>最新相关事件</h2>
             <p>本专题会优先归档与{item.tags.slice(0, 4).join("、")}相关的城市事件、公开报道、投稿线索和安全提醒。后续发布的新文章会继续关联到本页，方便读者按专题追踪。</p>
+            <D1ArticleSection title="后台发布的专题文章" eyebrow="D1 Topic Articles" query={{ topic: item.slug }} pageSize={20} compact />
             <h2>涉及城市</h2>
             <div className="tag-row">
               {(topicCities.length ? topicCities : cities.slice(0, 6)).map((city) => (

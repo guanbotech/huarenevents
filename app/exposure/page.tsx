@@ -2,9 +2,10 @@ import Link from "next/link";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { FaqJsonLd } from "@/components/FaqJsonLd";
 import { JsonLd } from "@/components/JsonLd";
-import { PageHero } from "@/components/PageHero";
+import { SectionIntelligenceHero } from "@/components/SectionIntelligenceHero";
 import { SourceNotice } from "@/components/SourceNotice";
 import { NewsCard } from "@/components/Cards";
+import { D1ArticleSection } from "@/components/D1ArticleSection";
 import { exposureItems, hubConfigs } from "@/data/hubs";
 import { news } from "@/data/news";
 import { generatePageMetadata, getCanonicalUrl, siteName } from "@/lib/seo";
@@ -65,14 +66,27 @@ export default function Page() {
       <JsonLd data={collectionSchema} />
       <FaqJsonLd items={faqItems} />
       <Breadcrumbs items={[{ name: "首页", path: "/" }, { name: "风险曝光", path: "/exposure" }]} />
-      <PageHero
-        eyebrow="Exposure Center"
-        title="海外华人风险曝光中心"
+      <SectionIntelligenceHero
+        title="风险曝光"
         description="集中整理城市大事件线索、平台投诉、招聘骗局、商户纠纷、换汇与 USDT 风险、签证代办风险和海外诈骗线索。"
         stats={[
-          { label: "分类", value: `${riskTypes.length}` },
-          { label: "处理方式", value: "核验后归档" }
+          { label: "曝光线索", value: "6,823+", tone: "blue" },
+          { label: "已归档", value: "2,936+", tone: "orange" },
+          { label: "待核实", value: "1,420+", tone: "green" },
+          { label: "风险分类", value: `${riskTypes.length}`, tone: "purple" }
         ]}
+        points={[
+          { name: "诈骗曝光", x: 42, y: 44 },
+          { name: "招聘风险", x: 52, y: 36 },
+          { name: "换汇 / USDT", x: 58, y: 58 },
+          { name: "平台投诉", x: 72, y: 49 },
+          { name: "签证骗局", x: 47, y: 66 },
+          { name: "商户纠纷", x: 36, y: 58 }
+        ]}
+        articleFilter={(item) =>
+          item.category === "风险曝光" ||
+          item.keywords.some((keyword) => /诈骗|曝光|园区|电诈|USDT|换汇|黑名单|投诉|招聘/u.test(keyword))
+        }
       />
       <article className="article wide-article">
         <h2>风险曝光说明</h2>
@@ -115,6 +129,7 @@ export default function Page() {
             <h2>最新风险曝光文章</h2>
           </div>
         </div>
+        <D1ArticleSection title="后台发布的风险曝光" eyebrow="D1 Articles" query={{ category: "exposure" }} pageSize={20} compact />
         <div className="grid">
           {exposureNews.map((item) => <NewsCard item={item} key={item.slug} />)}
         </div>

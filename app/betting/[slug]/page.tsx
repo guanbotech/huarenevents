@@ -32,7 +32,7 @@ export default async function Page({ params }: RouteProps) {
   const relatedNews = news.filter((item) => platform.relatedArticles.includes(item.slug));
   const faqItems = [
     { question: `${platform.name}评分是否代表平台安全？`, answer: "不代表。评分只反映公开资料完整度、投诉情况、条款透明度和风险信号，不构成安全承诺。" },
-    { question: `${platform.name}是否构成博彩网站推荐？`, answer: "不构成。本站只做资料整理、投诉摘要和风险提醒，不提供投注建议。" },
+    { question: `${platform.name}是否构成平台资料核验？`, answer: "不构成。本站只做资料整理、投诉摘要和风险提醒，不提供投注建议。" },
     { question: `遇到${platform.name}相关争议应保留什么？`, answer: "应保留账户截图、订单编号、TXID、客服记录、条款截图、付款凭证和完整时间线。" }
   ];
   const reviewSchema = {

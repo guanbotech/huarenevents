@@ -1,5 +1,4 @@
-const siteUrl = "https://huarenevents.com";
-const siteName = "华人大事件";
+import { getArticleBySlug, queryArticles, siteName, siteUrl } from "../_shared/articles.js";
 
 function escapeHtml(value) {
   return String(value || "")
@@ -36,29 +35,84 @@ function articleBlocks(body) {
     .join("");
 }
 
+function absImage(image) {
+  if (!image) return `${siteUrl}/images/og-default.svg`;
+  return image.startsWith("http") ? image : `${siteUrl}${image}`;
+}
+
+const categoryPathMap = {
+  "东南亚事件": "/dongnanya-dashijian",
+  "东南亚大事件": "/dongnanya-dashijian",
+  "华人简报": "/huaren-dashijian",
+  "华人大事件": "/huaren-dashijian",
+  "城市大事件": "/city",
+  "安全提醒": "/safety",
+  "风险曝光": "/exposure",
+  "诈骗曝光": "/exposure",
+  "法律案件": "/exposure",
+  "园区动态": "/exposure",
+  "抓捕遣返": "/exposure",
+  "资金风险": "/exposure",
+  "政策变化": "/dongnanya-dashijian",
+  "平台动态": "/betting-platform-review",
+  "平台风险": "/betting-platform-review",
+  "平台评测": "/betting-platform-review",
+  "海外工作": "/work",
+  "签证政策": "/visa"
+};
+
+function categoryPath(article) {
+  const slugPath = article.categorySlug ? `/${article.categorySlug}` : "";
+  return categoryPathMap[article.category] || categoryPathMap[article.categorySlug] || slugPath || "/dongnanya-dashijian";
+}
+
+function tagsHtml(article) {
+  const tags = [...new Set([...(article.tags || []), ...(article.keywords || [])])].slice(0, 12);
+  if (!tags.length) return "";
+  return `<div class="tag-row detail-tags">${tags.map((tag) => `<a class="tag" href="/tag/${encodeURIComponent(tag)}">${escapeHtml(tag)}</a>`).join("")}</div>`;
+}
+
+async function relatedHtml(env, article) {
+  const related = await queryArticles(env, {
+    pageSize: 6,
+    category: article.categorySlug,
+    status: "published"
+  }).catch(() => ({ items: [] }));
+  const items = (related.items || []).filter((item) => item.slug !== article.slug).slice(0, 4);
+  if (!items.length) return "";
+  return `<section class="runtime-related"><h2>相关文章</h2><div class="runtime-related-grid">${items.map((item) => `<a href="/news/${escapeHtml(item.slug)}"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.description)}</span></a>`).join("")}</div></section>`;
+}
+
 export async function onRequestGet({ env, params, request }) {
-  const slug = params.slug;
-  const row = await env.DB.prepare(
-    `SELECT slug, title, description, category, keywords, author, image, body, created_at AS createdAt, updated_at AS updatedAt
-     FROM articles
-     WHERE slug = ? AND status = 'published'
-     LIMIT 1`
-  ).bind(slug).first();
+  const requestedSlug = decodeURIComponent(params.slug || "");
+  const article = await getArticleBySlug(env, requestedSlug);
+  if (!article) return env.ASSETS.fetch(request);
 
-  if (!row) return env.ASSETS.fetch(request);
-
-  const canonical = `${siteUrl}/news/${encodeURIComponent(row.slug)}`;
-  const title = `${row.title} | ${siteName}`;
-  const keywords = row.keywords || "华人大事件,东南亚大事件,城市大事件";
-  const image = row.image?.startsWith("http") ? row.image : `${siteUrl}${row.image || "/images/og-default.svg"}`;
+  const canonical = `${siteUrl}/news/${encodeURIComponent(article.slug)}`;
+  const title = `${article.seoTitle || article.title} | ${siteName}`;
+  const description = article.seoDescription || article.description;
+  const keywords = article.seoKeywords || article.keywords.join(",");
+  const image = absImage(article.coverImage || article.image);
+  const publishedAt = article.publishedAt || article.createdAt;
+  const related = await relatedHtml(env, article);
+  const sectionPath = categoryPath(article);
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "首页", item: siteUrl },
+      { "@type": "ListItem", position: 2, name: article.category, item: `${siteUrl}${sectionPath}` },
+      { "@type": "ListItem", position: 3, name: article.title, item: canonical }
+    ]
+  };
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
-    headline: row.title,
-    description: row.description,
-    datePublished: row.createdAt,
-    dateModified: row.updatedAt || row.createdAt,
-    author: { "@type": "Person", name: row.author || "编辑部" },
+    headline: article.title,
+    description,
+    datePublished: publishedAt,
+    dateModified: article.updatedAt || publishedAt,
+    author: { "@type": "Person", name: article.author || "编辑部" },
     publisher: {
       "@type": "Organization",
       name: siteName,
@@ -74,21 +128,22 @@ export async function onRequestGet({ env, params, request }) {
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>${escapeHtml(title)}</title>
-  <meta name="description" content="${escapeHtml(row.description)}" />
+  <meta name="description" content="${escapeHtml(description)}" />
   <meta name="keywords" content="${escapeHtml(keywords)}" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="${canonical}" />
   <meta property="og:title" content="${escapeHtml(title)}" />
-  <meta property="og:description" content="${escapeHtml(row.description)}" />
+  <meta property="og:description" content="${escapeHtml(description)}" />
   <meta property="og:url" content="${canonical}" />
   <meta property="og:site_name" content="${siteName}" />
   <meta property="og:image" content="${image}" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${escapeHtml(title)}" />
-  <meta name="twitter:description" content="${escapeHtml(row.description)}" />
+  <meta name="twitter:description" content="${escapeHtml(description)}" />
   <meta name="twitter:image" content="${image}" />
   <link rel="stylesheet" href="/runtime-article.css" />
   <script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, "\\u003c")}</script>
+  <script type="application/ld+json">${JSON.stringify(breadcrumbJsonLd).replace(/</g, "\\u003c")}</script>
 </head>
 <body>
   <header class="site-header">
@@ -98,27 +153,30 @@ export async function onRequestGet({ env, params, request }) {
     </nav>
   </header>
   <main>
-    <nav class="breadcrumb" aria-label="面包屑导航"><span><a href="/">首页</a></span><span> / <a href="/dongnanya-dashijian">${escapeHtml(row.category)}</a></span><span> / ${escapeHtml(row.title)}</span></nav>
+    <nav class="breadcrumb" aria-label="面包屑导航"><span><a href="/">首页</a></span><span> / <a href="${escapeHtml(sectionPath)}">${escapeHtml(article.category)}</a></span><span> / ${escapeHtml(article.title)}</span></nav>
     <article class="article">
-      <span class="eyebrow">${escapeHtml(row.category)}</span>
-      <h1>${escapeHtml(row.title)}</h1>
-      <p class="meta">${escapeHtml(row.createdAt)} · ${escapeHtml(row.author || "编辑部")}</p>
+      <span class="eyebrow">${escapeHtml(article.category)}${article.verifyStatus === "pending" ? " · 待核实" : ""}</span>
+      <h1>${escapeHtml(article.title)}</h1>
+      <p class="meta">${escapeHtml(publishedAt)} · ${escapeHtml(article.author || "编辑部")}</p>
+      ${tagsHtml(article)}
       <section class="info-status-card" aria-label="信息状态">
-        <div><strong>信息类型</strong><span>${escapeHtml(row.category)}</span></div>
-        <div><strong>核验状态</strong><span>公开资料整理</span></div>
-        <div><strong>风险等级</strong><span>待核实</span></div>
-        <div><strong>涉及地区</strong><span>东南亚 / 海外华人</span></div>
-        <div><strong>发布时间</strong><span>${escapeHtml(row.createdAt)}</span></div>
-        <div><strong>最后更新</strong><span>${escapeHtml(row.updatedAt || row.createdAt)}</span></div>
-        <div class="wide"><strong>来源边界</strong><span>公开报道、公开资料、读者线索和城市资料整理</span></div>
+        <div><strong>信息类型</strong><span>${escapeHtml(article.category)}</span></div>
+        <div><strong>核验状态</strong><span>${article.verifyStatus === "pending" ? "待核实" : escapeHtml(article.verifyStatus || "公开资料整理")}</span></div>
+        <div><strong>风险等级</strong><span>${escapeHtml(article.riskLevel || "普通")}</span></div>
+        <div><strong>涉及城市</strong><span>${escapeHtml(article.citySlug || "未指定")}</span></div>
+        <div><strong>发布时间</strong><span>${escapeHtml(publishedAt)}</span></div>
+        <div><strong>最后更新</strong><span>${escapeHtml(article.updatedAt || publishedAt)}</span></div>
+        <div class="wide"><strong>来源边界</strong><span>公开信息、公开 Telegram 线索、用户投稿和编辑整理；不代表官方结论。</span></div>
         <div><strong>投诉更正</strong><a href="/correction">提交材料</a></div>
       </section>
-      <img src="${escapeHtml(row.image || "/images/og-default.svg")}" alt="${escapeHtml(row.title)}配图" />
-      <p class="article-lead">${escapeHtml(row.description)}</p>
-      <div class="article-body">${articleBlocks(row.body)}</div>
+      <img src="${escapeHtml(article.image || article.coverImage || "/images/og-default.svg")}" alt="${escapeHtml(article.title)}配图" />
+      <p class="article-lead">${escapeHtml(description)}</p>
+      <div class="article-body">${articleBlocks(article.body)}</div>
+      ${article.sourceUrl ? `<h2>公开来源参考</h2><p><a href="${escapeHtml(article.sourceUrl)}" rel="nofollow noopener" target="_blank">${escapeHtml(article.sourceName || article.sourceUrl)}</a></p>` : ""}
       <h2>本文核验说明</h2>
-      <p>本文根据公开网络信息、公开报道、读者线索和城市资料整理。涉及个人指控、案件结果、违法认定或平台责任的内容，本站不作最终判断，最终以官方通报、司法文件、权威媒体或相关机构后续信息为准。</p>
-      <div class="notice"><strong>投诉 / 更正入口：</strong>如你掌握官方通报、司法文件、权威媒体报道或其他可核验材料，可通过 <a href="/correction">投诉与更正页面</a> 提交。</div>
+      <p>本文根据公开网络信息、公开报道、读者线索和城市资料整理。涉及个人指控、案件结果、违法认定、平台责任或商业纠纷的内容，本站不作最终判断，最终以官方通报、司法文件、权威媒体或相关机构后续信息为准。</p>
+      <div class="notice"><strong>免责声明：</strong>本站内容仅供信息参考，不构成法律、投资、出行或投注建议。请遵守所在地法律法规，并自行核验信息风险。</div>
+      ${related}
     </article>
   </main>
 </body>

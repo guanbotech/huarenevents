@@ -89,10 +89,10 @@ export function generateTopicMetadata(topic: HubItem): Metadata {
 
 export function generateBettingPlatformMetadata(platform: BettingPlatform): Metadata {
   return generatePageMetadata({
-    title: `${platform.name}评测_博彩平台评测_线上博彩风险提醒`,
+    title: `${platform.name}资料核验_平台风险评测_出款争议提醒`,
     description: platform.description,
     path: `/betting/${platform.slug}`,
-    keywords: [platform.name, "博彩平台评测", "亚洲博彩平台", "亚洲赌博网站", "线上博彩", "博彩网站推荐", "博彩平台资料", "风险提醒", "用户口碑"]
+    keywords: [platform.name, "平台资料核验", "平台风险资料", "出款争议", "投诉线索", "资金风险", "公开资料整理", "风险提醒", "用户反馈"]
   });
 }
 

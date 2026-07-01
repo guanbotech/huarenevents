@@ -1,102 +1,71 @@
 import Link from "next/link";
-import { NewsCard } from "@/components/Cards";
 import { HomeLiveHero } from "@/components/HomeLiveHero";
 import { JsonLd } from "@/components/JsonLd";
 import { LatestArticles } from "@/components/LatestArticles";
 import { bettingPlatforms } from "@/data/bettingPlatforms";
-import { cityGroups } from "@/data/cities";
-import { hubConfigs } from "@/data/hubs";
 import { news } from "@/data/news";
 import { generatePageMetadata, siteDescription, siteName, siteUrl } from "@/lib/seo";
+import { getLiveArticlesPage } from "@/src/lib/liveArticles";
 
 export const metadata = generatePageMetadata({
   title: "华人大事件_东南亚华人大事件_西港大事件_金边大事件_马尼拉大事件",
   description: "华人大事件聚合东南亚华人大事件、华人社区动态、重点城市消息、诈骗曝光、抓捕遣返、园区动态、博彩平台动态和资金风险，整理西港大事件、金边大事件、木牌大事件、波贝大事件、老街大事件、妙瓦底大事件、曼谷大事件、马尼拉大事件等公开资料与投稿线索。",
   path: "/",
-  keywords: ["东南亚华人大事件", "华人大事件", "东南亚大事件", "西港大事件", "金边大事件", "木牌大事件", "马尼拉大事件", "曼谷大事件", "老街大事件", "妙瓦底大事件", "果敢大事件", "波贝大事件", "东南亚诈骗曝光", "园区动态", "电诈窝点", "抓捕遣返", "博彩平台动态", "亚洲博彩平台", "USDT 风险", "换汇风险", "菲律宾 POGO"]
+  keywords: ["东南亚华人大事件", "华人大事件", "东南亚大事件", "西港大事件", "金边大事件", "木牌大事件", "马尼拉大事件", "曼谷大事件", "老街大事件", "妙瓦底大事件", "果敢大事件", "波贝大事件", "东南亚诈骗曝光", "园区动态", "电诈窝点", "抓捕遣返", "博彩平台动态", "亚洲平台资料", "USDT 风险", "换汇风险", "菲律宾 POGO"]
 });
 
-const safetyTopics = ["城市治安", "签证政策", "跨境出行", "平台资金风险", "诈骗防范", "投稿核验"];
-
-const hubEntries = [
-  hubConfigs.exposure,
-  hubConfigs.business,
-  hubConfigs.topic,
-  hubConfigs.faq
-];
-
-const priorityCityGroups = [
-  {
-    country: "柬埔寨",
-    cities: ["xigang-dashijian", "jinbian-dashijian", "mupai-dashijian", "bobei-dashijian", "bayu-dashijian"]
-  },
-  {
-    country: "缅甸 / 缅北",
-    cities: ["laojie-dashijian", "miaowadi-dashijian", "guogan-dashijian", "mujie-dashijian", "laxu-dashijian"]
-  },
-  {
-    country: "菲律宾",
-    cities: ["manila-dashijian", "pasai-dashijian", "makadi-dashijian", "suwu-dashijian", "kelake-dashijian"]
-  },
-  {
-    country: "泰国",
-    cities: ["mangu-dashijian", "qingmai-dashijian", "batiya-dashijian", "puji-dashijian", "meisuo-dashijian"]
-  },
-  {
-    country: "越南 / 老挝",
-    cities: ["huzhiming-dashijian", "henei-dashijian", "xiangang-yuenan-dashijian", "wanxiang-dashijian", "jin-sanjiao-dashijian"]
-  }
-];
-
-const cityMap = new Map(cityGroups.flatMap((group) => group.cities.map((city) => [city.slug, city])));
-
 const cityRiskMap = [
-  { name: "西港", slug: "xigang-dashijian", count: "12", risk: "园区转型 / 商户迁移", updated: "2026-06-24", image: "/images/city-xigang.jpg" },
-  { name: "金边", slug: "jinbian-dashijian", count: "10", risk: "商圈租赁 / 签证服务", updated: "2026-06-24", image: "/images/city-jinbian.jpg" },
-  { name: "老街", slug: "laojie-dashijian", count: "8", risk: "边境安全 / 人员流动", updated: "2026-06-23", image: "/images/city-laojie.jpg" },
-  { name: "妙瓦底", slug: "miaowadi-dashijian", count: "8", risk: "泰缅边境 / 园区风险", updated: "2026-06-23", image: "/images/city-miaowadi.jpg" },
-  { name: "曼谷", slug: "mangu-dashijian", count: "9", risk: "签证 / 旅游出行", updated: "2026-06-22", image: "/images/city-mangu.jpg" },
-  { name: "马尼拉", slug: "manila-dashijian", count: "11", risk: "治安 / 换汇 / 证件", updated: "2026-06-24", image: "/images/city-manila.jpg" },
-  { name: "胡志明", slug: "huzhiming-dashijian", count: "7", risk: "商贸 / 物流 / 合规", updated: "2026-06-22", image: "/images/news-business.jpg" },
-  { name: "吉隆坡", slug: "jilongpo-dashijian", count: "6", risk: "租房 / 金融账户", updated: "2026-06-21", image: "/images/news-risk.jpg" },
-  { name: "新加坡", slug: "xinjiapo-dashijian", count: "6", risk: "就业准证 / 合规", updated: "2026-06-21", image: "/images/news-visa.jpg" }
+  { name: "西港", slug: "xigang-dashijian", count: "12", risk: "园区转型 / 商户迁移", updated: "2026-06-24" },
+  { name: "金边", slug: "jinbian-dashijian", count: "10", risk: "商圈租赁 / 签证服务", updated: "2026-06-24" },
+  { name: "老街", slug: "laojie-dashijian", count: "8", risk: "边境安全 / 人员流动", updated: "2026-06-23" },
+  { name: "妙瓦底", slug: "miaowadi-dashijian", count: "8", risk: "泰缅边境 / 园区风险", updated: "2026-06-23" },
+  { name: "马尼拉", slug: "manila-dashijian", count: "11", risk: "治安 / 换汇 / 证件", updated: "2026-06-24" },
+  { name: "曼谷", slug: "mangu-dashijian", count: "9", risk: "签证 / 旅游出行", updated: "2026-06-22" },
+  { name: "胡志明", slug: "huzhiming-dashijian", count: "7", risk: "商贸 / 物流 / 合规", updated: "2026-06-22" }
 ];
 
-const scamPatterns = ["换汇骗局", "高薪招聘", "假客服", "资金盘", "签证代办", "护照扣押", "虚假投资", "博彩平台假评测", "USDT 出入金争议"];
-const verifySteps = ["线索提交", "初步筛选", "公开来源核对", "隐私过滤", "风险标注", "发布归档", "投诉更正"];
-
-const visualHubs = [
-  { title: "东南亚大事件", href: "/dongnanya-dashijian", image: "/images/city-xigang.jpg", tag: "区域事件", text: "诈骗曝光、园区动态、抓捕遣返、口岸政策" },
-  { title: "城市大事件", href: "/city", image: "/images/city-jinbian.jpg", tag: "城市资料", text: "西港、金边、木牌、马尼拉、曼谷" },
-  { title: "华人大事件", href: "/huaren-dashijian", image: "/images/news-business.jpg", tag: "华人社区", text: "商户纠纷、签证骗局、招聘风险、失联求助" },
-  { title: "风险曝光", href: "/exposure", image: "/images/news-risk.jpg", tag: "线索核验", text: "电诈窝点、换汇、USDT、Telegram 风险" }
+const exposureStats = [
+  ["诈骗曝光", "1,286"],
+  ["园区/招聘风险", "982"],
+  ["Telegram 风险", "646"],
+  ["USDT/换汇风险", "712"],
+  ["签证/中介骗局", "531"],
+  ["平台投诉", "563"],
+  ["租房/生活纠纷", "172"]
 ];
 
-const coreKeywordLinks = [
-  { title: "东南亚大事件", href: "/dongnanya-dashijian", text: "诈骗曝光、园区动态、抓捕遣返、政策变化" },
-  { title: "华人大事件", href: "/huaren-dashijian", text: "华人社区、商户纠纷、求职风险、签证骗局" },
-  { title: "西港大事件", href: "/city/xigang-dashijian", text: "园区转型、口岸消息、华人商户、安全提醒" },
-  { title: "金边大事件", href: "/city/jinbian-dashijian", text: "商圈租赁、签证服务、执法消息、资金风险" },
-  { title: "木牌大事件", href: "/city/mupai-dashijian", text: "边境口岸、园区动态、人员流动、通关消息" },
-  { title: "马尼拉大事件", href: "/city/manila-dashijian", text: "华人安全、POGO 监管、换汇风险、证件提醒" }
+const hotTopics = [
+  ["缅北安全专题", "386"],
+  ["马尼拉治安专题", "284"],
+  ["USDT 平台资金风险", "512"],
+  ["Telegram 招聘诈骗", "623"],
+  ["签证代办骗局", "298"],
+  ["换汇骗局专题", "432"]
 ];
 
-const riskTopicLinks = [
-  { title: "东南亚诈骗曝光", href: "/exposure/scam", tag: "诈骗曝光", text: "公开新闻索引、社群线索、假客服和资金盘风险。" },
-  { title: "园区动态", href: "/topic/overseas-job-scam", tag: "园区 / 招聘", text: "海外高薪招聘、护照扣押、岗位不明和园区工作风险。" },
-  { title: "抓捕遣返", href: "/dongnanya-dashijian", tag: "执法动态", text: "被抓、抓获、落网、拘留、遣返和移民执法消息。" },
-  { title: "Telegram 风险频道", href: "/topic/telegram-scam", tag: "社群风险", text: "假客服、担保交易、换汇广告和招聘骗局线索。" },
-  { title: "USDT 与换汇风险", href: "/topic/usdt-platform-risk", tag: "资金风险", text: "链上转账、支付冻结、换汇纠纷和平台出入金争议。" },
-  { title: "签证骗局", href: "/topic/visa-agent-scam", tag: "签证 / 入境", text: "签证代办、假官网、假批文、入境拒签和中介纠纷。" }
+const safetyTopics = ["城市治安提醒", "签证政策提醒", "跨境出行提醒", "平台资金风险", "诈骗防范指南", "核验流程说明"];
+const keywordTags = [
+  "东南亚华人大事件",
+  "华人大事件",
+  "西港大事件",
+  "金边大事件",
+  "木牌大事件",
+  "波贝大事件",
+  "老街大事件",
+  "妙瓦底大事件",
+  "马尼拉大事件",
+  "曼谷大事件",
+  "东南亚诈骗曝光",
+  "园区动态",
+  "电诈窝点",
+  "抓捕遣返",
+  "签证骗局",
+  "Telegram 风险",
+  "USDT 风险",
+  "换汇风险",
+  "平台投诉",
+  "出款争议"
 ];
-
-const bettingNewsLinks = [
-  { title: "亚洲博彩平台动态", href: "/betting/asia", text: "亚洲博彩平台、亚洲赌博网站和中文平台公开资料整理。", tag: "亚洲平台" },
-  { title: "菲律宾 POGO 监管", href: "/topic/betting-platform-blacklist", text: "菲律宾博彩监管、平台迁移、招聘风险和执法消息索引。", tag: "监管" },
-  { title: "博彩平台资金纠纷", href: "/exposure/platform", text: "出款延迟、账户冻结、客服失联、USDT 到账和投诉记录。", tag: "资金纠纷" },
-  { title: "博彩网站推荐风险", href: "/betting-platform-review", text: "识别广告导流、虚假评测、黑名单平台和异常营销话术。", tag: "评测风险" }
-];
-
 const faqs = [
   {
     question: "华人大事件主要关注什么内容？",
@@ -120,9 +89,10 @@ const faqs = [
   }
 ];
 
-export default function HomePage() {
-  const latestArticles = news.slice(0, 12);
-  const featuredArticles = news.slice(0, 6);
+export default async function HomePage() {
+  const live = await getLiveArticlesPage(1, 12).catch(() => null);
+  const latestArticles = live?.items?.length ? live.items : news.slice(0, 12);
+  const featuredArticles = latestArticles;
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -141,6 +111,7 @@ export default function HomePage() {
       acceptedAnswer: { "@type": "Answer", text: item.answer }
     }))
   };
+
   return (
     <main>
       <JsonLd data={organizationSchema} />
@@ -148,297 +119,148 @@ export default function HomePage() {
       <h1 className="seo-page-title">华人大事件：东南亚华人大事件、西港大事件、金边大事件与城市风险简报</h1>
       <HomeLiveHero articles={latestArticles} />
 
-      <LatestArticles articles={featuredArticles} />
-
-      <section className="section core-keyword-section">
+      <section className="section today-focus-section">
         <div className="section-head">
-          <div>
-            <span className="eyebrow">核心入口</span>
-            <h2>东南亚华人大事件关键词入口</h2>
-          </div>
-          <Link href="/city">城市大事件</Link>
+          <h2>今日重点</h2>
+          <Link href="/news">查看更多</Link>
         </div>
-        <div className="core-keyword-grid">
-          {coreKeywordLinks.map((item) => (
-            <Link className="core-keyword-card" href={item.href} key={item.title}>
-              <strong>{item.title}</strong>
-              <span>{item.text}</span>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <section className="section visual-brief-section">
-        <div className="section-head">
-          <div>
-            <span className="eyebrow">重点入口</span>
-            <h2>今日重点入口</h2>
-          </div>
-          <Link href="/exposure">查看风险曝光</Link>
-        </div>
-        <div className="visual-brief-grid">
-          {visualHubs.map((item) => (
-            <Link className="visual-brief-card" href={item.href} key={item.title}>
+        <div className="today-focus-grid">
+          {featuredArticles.slice(0, 5).map((item, index) => (
+            <Link className="today-focus-card" href={`/news/${item.slug}`} key={item.slug}>
               <img src={item.image} alt={`${item.title}封面`} />
-              <span>{item.tag}</span>
+              <span className="focus-index">{index + 1}</span>
+              <span className="focus-tag">{item.category}</span>
               <h3>{item.title}</h3>
-              <p>{item.text}</p>
+              <p>{item.description}</p>
+              <em>{item.createdAt}</em>
             </Link>
           ))}
         </div>
       </section>
 
-      <section className="section risk-topic-section">
-        <div className="section-head">
-          <div>
-            <span className="eyebrow">风险专题</span>
-            <h2>诈骗曝光、园区动态与抓捕遣返</h2>
-          </div>
-          <Link href="/exposure">全部曝光</Link>
+      <section className="section home-main-grid">
+        <div className="home-main-left">
+          <LatestArticles articles={featuredArticles} />
         </div>
-        <div className="risk-topic-grid">
-          {riskTopicLinks.map((item) => (
-            <Link className="risk-topic-card" href={item.href} key={item.title}>
-              <span>{item.tag}</span>
-              <h3>{item.title}</h3>
-              <p>{item.text}</p>
-            </Link>
-          ))}
-        </div>
+        <aside className="home-sidebar">
+          <section className="home-side-card city-map-panel">
+            <div className="side-card-head">
+              <h2>城市风险地图</h2>
+              <Link href="/city">全部城市</Link>
+            </div>
+            <div className="mini-map">
+              {cityRiskMap.map((city, index) => (
+                <Link className={`mini-map-point point-${index + 1}`} href={`/city/${city.slug}`} key={city.slug}>
+                  <strong>{city.name}</strong>
+                  <span>{city.risk}</span>
+                  <em>{city.count} 篇</em>
+                </Link>
+              ))}
+            </div>
+          </section>
+
+          <section className="home-side-card weekly-card">
+            <div className="side-card-head">
+              <h2>本周风险简报</h2>
+              <Link href="/exposure">查看更多</Link>
+            </div>
+            <strong>本周东南亚华人风险等级：<span>中等偏高</span></strong>
+            <ul>
+              <li>风险人员流动频繁，请防范诈骗</li>
+              <li>换汇诈骗持续高发，USDT 风险上升</li>
+              <li>签证政策调整频繁，出行前务必核实</li>
+              <li>部分城市治安改善，但仍需警惕</li>
+            </ul>
+            <p>更新时间：2026-06-25</p>
+          </section>
+
+          <section className="home-side-card keyword-tag-card">
+            <div className="side-card-head">
+              <h2>关键词标签</h2>
+              <Link href="/tag">全部标签</Link>
+            </div>
+            <div className="keyword-tag-grid">
+              {keywordTags.map((tag) => (
+                <Link href={`/tag/${encodeURIComponent(tag)}`} key={tag}>
+                  {tag}
+                </Link>
+              ))}
+            </div>
+          </section>
+        </aside>
       </section>
 
-      <section className="section">
-        <div className="section-head">
-          <div>
-            <span className="eyebrow">City Events</span>
-            <h2>东南亚城市大事件</h2>
+      <section className="section dashboard-grid">
+        <article className="dashboard-card">
+          <div className="side-card-head">
+            <h2>风险曝光中心</h2>
+            <Link href="/exposure">更多</Link>
           </div>
-          <Link href="/city">全部城市</Link>
-        </div>
-        <div className="city-keyword-grid city-visual-grid">
-          {priorityCityGroups.map((group) => (
-            <article className="city-keyword-card" key={group.country}>
-              <span className="city-card-kicker">City Index</span>
-              <h3>{group.country}</h3>
-              <div className="tag-row">
-                {group.cities.map((slug) => {
-                  const city = cityMap.get(slug);
-                  if (!city) return null;
-                  return (
-                    <Link className="tag" href={`/city/${city.slug}`} key={city.slug}>
-                      {city.name}大事件
-                    </Link>
-                  );
-                })}
-              </div>
-            </article>
-          ))}
-        </div>
+          <ul className="stat-list">
+            {exposureStats.map(([label, count]) => <li key={label}><span>{label}</span><strong>{count} 篇</strong></li>)}
+          </ul>
+          <Link className="module-button" href="/exposure">查看所有风险曝光</Link>
+        </article>
+
+        <article className="dashboard-card">
+          <div className="side-card-head">
+            <h2>平台风险资料库</h2>
+            <Link href="/betting-platform-review">更多</Link>
+          </div>
+          <p>整理亚洲平台、中文平台、USDT 平台相关公开资料、用户反馈、支付方式、出款体验、投诉线索和风险等级。内容仅供信息参考，不构成投注建议。</p>
+          <ul className="platform-rank-mini">
+            {bettingPlatforms.slice(0, 5).map((platform, index) => (
+              <li key={platform.slug}>
+                <span>{index + 1}</span>
+                <Link href={`/betting/${platform.slug}`}>{platform.name}</Link>
+                <em>{platform.rating}/5</em>
+                <strong>风险 {platform.riskLevel}</strong>
+              </li>
+            ))}
+          </ul>
+          <Link className="module-button" href="/betting-platform-review">查看全部平台</Link>
+        </article>
+
+        <article className="dashboard-card">
+          <div className="side-card-head">
+            <h2>热门专题</h2>
+            <Link href="/topic">更多</Link>
+          </div>
+          <ul className="stat-list">
+            {hotTopics.map(([label, count]) => <li key={label}><span>{label}</span><strong>{count} 篇</strong></li>)}
+          </ul>
+          <Link className="module-button" href="/topic">查看所有专题</Link>
+        </article>
+
+        <article className="dashboard-card">
+          <div className="side-card-head">
+            <h2>安全提醒指南</h2>
+            <Link href="/safety">更多</Link>
+          </div>
+          <ul className="stat-list">
+            {safetyTopics.map((topic, index) => <li key={topic}><span>{topic}</span><strong>{342 - index * 37} 篇</strong></li>)}
+          </ul>
+          <Link className="module-button" href="/safety">查看更多安全指南</Link>
+        </article>
       </section>
 
-      <section className="section betting-dynamic-section">
-        <div className="section-head">
-          <div>
-            <span className="eyebrow">博彩动态</span>
-            <h2>博彩平台动态、监管与资金纠纷</h2>
-          </div>
-          <Link href="/betting-platform-review">平台评测</Link>
-        </div>
-        <div className="betting-dynamic-panel">
-          <div className="betting-dynamic-copy">
-            <h3>亚洲博彩平台与线上博彩风险资料</h3>
-            <p>
-              首页新增博彩动态入口，用于整理亚洲博彩平台、亚洲赌博网站、线上博彩、博彩网站推荐、菲律宾 POGO 监管、平台招聘风险、资金纠纷、USDT 出入金和出款争议。内容仅供信息参考，不构成投注建议；请遵守所在地法律法规。
-            </p>
-          </div>
-          <div className="betting-dynamic-list">
-            {bettingNewsLinks.map((item) => (
-              <Link href={item.href} key={item.title}>
-                <span>{item.tag}</span>
-                <strong>{item.title}</strong>
-                <em>{item.text}</em>
-              </Link>
+      <section className="section faq-submit-grid">
+        <div>
+          <h2>常见问题</h2>
+          <div className="faq-list">
+            {faqs.map((item) => (
+              <article className="faq-item" key={item.question}>
+                <h3>{item.question}</h3>
+                <p>{item.answer}</p>
+              </article>
             ))}
           </div>
         </div>
-      </section>
-
-      <section className="section">
-        <div className="section-head">
-          <div>
-            <span className="eyebrow">Risk Map</span>
-            <h2>城市风险地图</h2>
-          </div>
-          <Link href="/city">全部城市</Link>
-        </div>
-        <div className="risk-map-grid visual-risk-map">
-          {cityRiskMap.map((city) => (
-            <Link className="risk-map-card" href={`/city/${city.slug}`} key={city.slug}>
-              <img src={city.image} alt={`${city.name}大事件封面`} />
-              <div>
-                <strong>{city.name}大事件</strong>
-                <span>{city.risk}</span>
-                <span>最新事件 {city.count} 条</span>
-                <em>{city.updated}</em>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="section-head">
-          <div>
-            <span className="eyebrow">Scam Library</span>
-            <h2>诈骗套路库</h2>
-          </div>
-          <Link href="/topic/telegram-scam">查看专题</Link>
-        </div>
-        <div className="tag-row">
-          {scamPatterns.map((item) => <Link className="tag" href="/exposure/scam" key={item}>{item}</Link>)}
-        </div>
-      </section>
-
-      <section className="section split-band">
-        <div>
-          <span className="eyebrow">Weekly Brief</span>
-          <h2>本周风险简报</h2>
-          <p>本周东南亚华人风险简报：诈骗曝光、执法清查、城市安全与平台资金风险。重点关注西港、金边、马尼拉、曼谷、老街、妙瓦底等城市的公开线索和后续更新。</p>
-        </div>
-        <Link className="button-link" href="/exposure">查看风险曝光</Link>
-      </section>
-
-      <section className="section">
-        <div className="section-head">
-          <div>
-            <span className="eyebrow">Verification</span>
-            <h2>公开线索核验流程</h2>
-          </div>
-        </div>
-        <div className="process-row">
-          {verifySteps.map((step, index) => (
-            <div key={step}><strong>{index + 1}</strong><span>{step}</span></div>
-          ))}
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="section-head">
-          <div>
-            <span className="eyebrow">Sections</span>
-            <h2>栏目入口</h2>
-          </div>
-        </div>
-        <div className="hub-matrix">
-          {hubEntries.map((hub) => (
-            <Link className="hub-matrix-card" href={hub.basePath} key={hub.basePath}>
-              <span>{hub.label}</span>
-              <h3>{hub.title}</h3>
-              <p>{hub.description}</p>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="section-head">
-          <div>
-            <span className="eyebrow">Latest News</span>
-            <h2>最新报道</h2>
-          </div>
-          <Link href="/news">更多</Link>
-        </div>
-        <div className="grid">
-          {news.slice(0, 12).map((item) => <NewsCard item={item} key={item.slug} />)}
-        </div>
-      </section>
-
-      <section className="section split-band">
-        <div>
-          <span className="eyebrow">Safety</span>
-          <h2>安全提醒</h2>
-          <p>
-            海外城市信息变化快，读者应把公开新闻、当地官方通知、使领馆提醒和社区反馈分开核验。本站围绕城市治安、签证政策、跨境出行、平台资金风险、诈骗防范和投稿核验提供简报式入口。
-          </p>
-          <div className="tag-row">
-            {safetyTopics.map((topic) => <Link className="tag" href="/safety" key={topic}>{topic}</Link>)}
-          </div>
-        </div>
-        <Link className="button-link" href="/safety">查看安全提醒</Link>
-      </section>
-
-      <section className="section">
-        <div className="section-head">
-          <div>
-            <span className="eyebrow">Risk Review</span>
-            <h2>平台风险评测</h2>
-          </div>
-          <Link href="/betting-platform-review">更多</Link>
-        </div>
-        <div className="risk-review-panel visual-risk-panel">
-          <img src="/images/news-risk.jpg" alt="平台风险评测资料封面" />
-          <div className="risk-review-intro">
-            <span className="eyebrow">资料库 / 风险提示</span>
-            <h3>公开资料、用户反馈与投诉线索整理</h3>
-            <p>
-              整理亚洲博彩平台、亚洲赌博网站、线上博彩平台、博彩网站推荐类页面、中文平台和 USDT 平台的公开资料、用户反馈、支付方式、出款体验、投诉线索和风险等级。内容仅供信息参考，不构成投注建议。
-            </p>
-          </div>
-          <div className="risk-note-grid">
-            <div>
-              <strong>18+ 年龄提示</strong>
-              <span>博彩相关内容仅面向法定年龄用户展示，未成年人请立即离开相关页面。</span>
-            </div>
-            <div>
-              <strong>风险提示</strong>
-              <span>博彩具有资金风险和成瘾风险，请勿在法律禁止地区参与相关活动。</span>
-            </div>
-            <div>
-              <strong>免责声明</strong>
-              <span>本站不保证任何平台的安全性、收益性或出款稳定性。</span>
-            </div>
-          </div>
-        </div>
-        <div className="risk-card-grid">
-          {bettingPlatforms.map((platform) => (
-            <Link className="risk-review-card" href={`/betting/${platform.slug}`} key={platform.slug}>
-              <div className="risk-card-topline">
-                <span className={`risk-level risk-${platform.riskLevel}`}>风险 {platform.riskLevel}</span>
-                <span>评分 {platform.rating}/5</span>
-              </div>
-              <h3>{platform.name}</h3>
-              <p>{platform.description}</p>
-              <dl>
-                <div>
-                  <dt>类型</dt>
-                  <dd>{platform.type}</dd>
-                </div>
-                <div>
-                  <dt>支付</dt>
-                  <dd>{platform.payments.slice(0, 2).join(" / ")}</dd>
-                </div>
-                <div>
-                  <dt>更新</dt>
-                  <dd>{platform.lastUpdated}</dd>
-                </div>
-              </dl>
-              <span className="risk-card-link">查看资料</span>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <section className="section">
-        <span className="eyebrow">FAQ</span>
-        <h2>常见问题</h2>
-        <div className="grid">
-          {faqs.map((item) => (
-            <article className="card" key={item.question}>
-              <h3>{item.question}</h3>
-              <p>{item.answer}</p>
-            </article>
-          ))}
-        </div>
+        <aside className="submit-cta-card">
+          <h2>爆料投稿</h2>
+          <p>提交城市事件、华人社区动态、安全提醒、平台投诉和可核验公开资料。</p>
+          <Link className="button-link" href="/submit">提交线索</Link>
+        </aside>
       </section>
     </main>
   );
